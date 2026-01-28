@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -20,89 +14,82 @@ enum RoleName {
 }
 
 
-model users {
-  id          Int      @unique @id @default(autoincrement())
-  nationalId  String   @unique
-  firstname   String
-  lastname    String
-  password    String
-  imageurl    String?
-  address     String
-  subdistrict String
-  district    String
-  province    String
-  postalCode  String
-  consituencynumber Int
-  roleName    RoleName @default(VOTER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  consituency   consituency? @relation(fields: [consituencynumber], references: [id])
-  vote        vote[]
-  role        role[]
+model users {
+  id                Int         @id @unique @default(autoincrement())
+  nationalId        String      @unique
+  firstname         String
+  lastname          String
+  password          String
+  imageurl          String?
+  address           String
+  subdistrict       String
+  district          String
+  province          String
+  postalCode        String
+  consituencynumber Int
+  roleName          RoleName    @default(VOTER)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  role              role[]
+  consituency       consituency @relation(fields: [province,consituencynumber], references: [province,number])
+  vote              vote[]
 }
 
 model role {
-  id              Int      @id @default(autoincrement())
-  usersId         Int
-  roleName        RoleName
-  discription     String
-
-  user            users     @relation(fields: [usersId], references: [id])
+  id          Int      @id @default(autoincrement())
+  usersId     Int
+  roleName    RoleName
+  discription String
+  user        users    @relation(fields: [usersId], references: [id])
 }
 
-
-
 model consituency {
-  id            Int      @id @default(autoincrement())
-  province      String              
-  number        Int
-  isclosed      Boolean  @default(true)
+  id         Int         @default(autoincrement())
+  province   String
+  number     Int
+  isclosed   Boolean     @default(true)
+  candidates candidate[]
+  user       users[]
 
-  user          users[]
-  candidates    candidate[]
-
-  @@unique([province, number])
+  @@id([province, number])
 }
 
 model party {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  imageurl  String?
-  policy    String?
-
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  imageurl   String?
+  policy     String?
   candidates candidate[]
 }
 
-
 model candidate {
-  id                  Int      @id @default(autoincrement())
-  candidateNumber     Int
-  firstname           String
-  lastname            String
-  imageurl            String?
-  consituencyId       Int
-  partyId             Int
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id              Int         @id @default(autoincrement())
+  candidateNumber Int
+  firstname       String
+  lastname        String
+  imageurl        String?
+  consituencyId   Int
+  consituencyProvince String
+  partyId         Int
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  consituency     consituency @relation(fields: [consituencyProvince, consituencyId], references: [province, number])
+  party           party       @relation(fields: [partyId], references: [id])
+  vote            vote[]
 
-  consituency         consituency @relation(fields: [consituencyId], references: [id])
-  party               party       @relation(fields: [partyId], references: [id])
-  vote                vote[]
-
-  @@unique([consituencyId, candidateNumber])
+  @@unique([candidateNumber,partyId, consituencyId, consituencyProvince])
 }
 
-
 model vote {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   usersId     Int
   candidateId Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  user        users     @relation(fields: [usersId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   candidate   candidate @relation(fields: [candidateId], references: [id])
+  user        users     @relation(fields: [usersId], references: [id])
 
   @@unique([usersId, candidateId])
 }
+
