@@ -13,4 +13,94 @@ datasource db {
   provider = "postgresql"
 }
 
+enum RoleName {
+  ADMIN
+  VOTER
+  ECT
+}
 
+
+model users {
+  id          Int      @unique @id @default(autoincrement())
+  nationalId  String   @unique
+  firstname   String
+  lastname    String
+  password    String
+  imageurl    String?
+  address     String
+  subdistrict String
+  district    String
+  province    String
+  postalCode  String
+  consituencynumber Int
+  roleName    RoleName @default(VOTER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  consituency consituency[]
+  role        role[]
+  vote        vote[]
+}
+
+
+model role {
+  id              Int      @id @default(autoincrement())
+  usersId         Int
+  roleName        RoleName
+
+  user            users     @relation(fields: [usersId], references: [id])
+}
+
+
+model consituency {
+  id            Int      @id @default(autoincrement())
+  province      String              
+  number        Int
+
+  user          users[]
+  candidates    candidate[]
+
+  @@unique([province, number])
+}
+
+model party {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  imageurl  String?
+  policy    String?
+
+  candidates candidate[]
+}
+
+
+model candidate {
+  id                  Int      @id @default(autoincrement())
+  firstname           String
+  lastname            String
+  imageurl            String?
+  consituencyprovince String
+  consituencynumber   Int
+  partyId             Int
+  isclosed            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  consituency         consituency @relation(fields: [consituencyprovince, consituencynumber], references: [province, number])
+  party               party       @relation(fields: [partyId], references: [id])
+  vote                vote[]
+  @@unique([consituencyprovince, consituencynumber])
+}
+
+
+model vote {
+  id          Int      @id @default(autoincrement())
+  usersId     Int
+  candidateId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        users     @relation(fields: [usersId], references: [id])
+  candidate   candidate @relation(fields: [candidateId], references: [id])
+
+  @@unique([usersId, candidateId])
+}
