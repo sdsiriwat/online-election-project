@@ -37,25 +37,27 @@ model users {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  consituency consituency[]
-  role        role[]
+  consituency   consituency? @relation(fields: [consituencynumber], references: [id])
   vote        vote[]
+  role        role[]
 }
-
 
 model role {
   id              Int      @id @default(autoincrement())
   usersId         Int
   roleName        RoleName
+  discription     String
 
   user            users     @relation(fields: [usersId], references: [id])
 }
+
 
 
 model consituency {
   id            Int      @id @default(autoincrement())
   province      String              
   number        Int
+  isclosed      Boolean  @default(true)
 
   user          users[]
   candidates    candidate[]
@@ -75,20 +77,20 @@ model party {
 
 model candidate {
   id                  Int      @id @default(autoincrement())
+  candidateNumber     Int
   firstname           String
   lastname            String
   imageurl            String?
-  consituencyprovince String
-  consituencynumber   Int
+  consituencyId       Int
   partyId             Int
-  isclosed            Boolean  @default(true)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
-  consituency         consituency @relation(fields: [consituencyprovince, consituencynumber], references: [province, number])
+  consituency         consituency @relation(fields: [consituencyId], references: [id])
   party               party       @relation(fields: [partyId], references: [id])
   vote                vote[]
-  @@unique([consituencyprovince, consituencynumber])
+
+  @@unique([consituencyId, candidateNumber])
 }
 
 
