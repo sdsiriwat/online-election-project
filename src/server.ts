@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import authRoutes from './routes/AuthRoutes'
+import createConstituency from './routes/ConstituencyRoutes'
 
 const app = express()
 const port = 3000
@@ -17,6 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/auth', authRoutes)
 
+app.use('/cre', createConstituency)
 
 
 
