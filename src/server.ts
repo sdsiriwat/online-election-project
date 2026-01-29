@@ -1,0 +1,25 @@
+import express, { Request, Response } from 'express'
+import cors from 'cors'
+import authRoutes from './routes/AuthRoutes'
+
+const app = express()
+const port = 3000
+app.use(express.json())
+app.use(cors())
+
+
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello World!')
+})
+
+
+
+app.use('/auth', authRoutes)
+
+
+
+
+app.listen(port, () => {
+  console.log(`App listening at http://localhost:${port}`)
+})
