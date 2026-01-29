@@ -1,4 +1,3 @@
-// src/routes/AuthRoutes.ts
 import express from 'express';
 import { RegisterRequest } from '../models/RegisterRequest';
 import * as authService from '../services/AuthServices';
