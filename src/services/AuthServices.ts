@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 export async function registerUser(registerRequest: RegisterRequest) {
     // 1. Destructure ข้อมูลออกมา
-    const { nationalId, firstname, lastname, address, province, district, subdistrict, constituency, password } = registerRequest;
+    const { nationalId, firstname, lastname, address, province, district, subdistrict, consituencyId, password } = registerRequest;
     return await authRepo.registerUser(
         nationalId, 
         firstname, 
@@ -14,7 +14,7 @@ export async function registerUser(registerRequest: RegisterRequest) {
         province, 
         district,
         subdistrict,
-        constituency,
+        consituencyId,
         bcrypt.hashSync(password, 10)
     );
 }

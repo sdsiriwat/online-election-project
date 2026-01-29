@@ -12,30 +12,24 @@ export async function registerUser(
     province: string,
     district: string,
     subdistrict: string,
-    constituency: number,
+    consituencyId: number,
     password: string,
 
 ) {
     
 
     return prisma.users.create({
-        data: {
+       data: {
             nationalId: nationalId,
             firstname: firstName,
             lastname: lastName,
             roleName: ROLE_VOTER,
             password: password,
-            consituencynumber: constituency,
-            // consituencynumber: {
-            //     connect: {
-            //         id: constituency
-            //     }
-            // },
+            consituencyID: consituencyId,
             address: address,
             subdistrict: subdistrict, 
             district: district, 
-            province: province, 
-            postalCode: ''
+            province: province,
         }
     });
 }
