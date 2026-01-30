@@ -31,7 +31,7 @@ export async function registerUser(
 
             role:{
                 create: {
-                    roleName: RoleName.ROLE_ADMIN
+                    roleName: RoleName.ROLE_VOTER
                 }
             }
         },

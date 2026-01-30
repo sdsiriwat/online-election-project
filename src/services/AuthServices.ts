@@ -39,8 +39,7 @@ export async function getUserFromToken(token: string) {
         throw new Error('JWT_SECRET is not defined in environment variables');
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
-    const user = await authRepo.findUserByNationalId(decoded.nationalId);
-    return user;
+    return await authRepo.findUserByNationalId(decoded.nationalId);
 }   
 
 export async function comparePassword(password: string, hashedPassword: string) {

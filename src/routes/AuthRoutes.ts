@@ -3,6 +3,7 @@ import { RegisterRequest } from '../models/RegisterRequest';
 import { LoginRequest } from '../models/LoginRequest';
 import * as authService from '../services/AuthServices';
 import { RoleName } from '../../generated/prisma/enums';
+import * as authMiddleware from '../middleware/AuthMiddleware';
 
 
 
@@ -59,6 +60,23 @@ router.post('/login', async (req, res) => {
         status: 'success',
         message: 'Login successful',
         token: token,
+        // user: {
+        //     id: user.id,
+        //     nationalId: user.nationalId,
+        //     firstname: user.firstname,
+        //     lastname: user.lastname,
+        //     consituencypercent: user.consituency.province,
+        //     consituencynumber: user.consituency.consituencynumber,
+        //     rolename: user.role.map(r => r.roleName) as RoleName[],
+        // }
+    });
+});
+
+
+router.get('/me', authMiddleware.protect, async (req, res) => {
+    const user = req.body.user;
+    res.status(200).json({
+        status: 'success',
         user: {
             id: user.id,
             nationalId: user.nationalId,
@@ -66,9 +84,11 @@ router.post('/login', async (req, res) => {
             lastname: user.lastname,
             consituencypercent: user.consituency.province,
             consituencynumber: user.consituency.consituencynumber,
-            RoleName: user.role.map(r => r.roleName) as RoleName[],
+            rolename: user.role.map((r: { roleName: string; }) => r.roleName) as RoleName[],
         }
-    });
-});
+    })
+})
+
+
 
 export default router;
