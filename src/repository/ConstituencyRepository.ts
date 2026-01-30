@@ -9,8 +9,6 @@ export async function createConstituency(
     zipcode: string,
 
 ) {
-    
-
     return prisma.consituency.create({
        data: {
             consituencynumber: consituencynumber,

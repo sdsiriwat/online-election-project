@@ -6,7 +6,7 @@ export interface RegisterRequest {
     province: string;
     district: string;
     subdistrict: string;
-    constituency: number;
+    consituencyId: number;
     password: string;
     confirmPassword: string;
 }
