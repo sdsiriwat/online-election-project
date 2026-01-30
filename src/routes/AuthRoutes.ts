@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
         const existingUser = await authService.existingNationalId(registerRequest);
         
         if (existingUser) {
-            return res.status(400).json({ status: 'error', message: 'เลขบัตรประชาชนนี้ถูกใช้งานแล้ว' });
+            return res.status(400).json({ status: 'error', message: 'เลขบัตรประชาชนนี้ถูกใช้งานแล้วจ้า' });
         }
         const response = await authService.registerUser(registerRequest);
         
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
         }
     }
 
-    const token = await authService.generatetoken(user.nationalId);
+    const token = await authService.generatetoken(user.nationalId, user.role.map(r => r.roleName), user.consituencyID);
 
     res.status(200).json({
         status: 'success',
@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
             lastname: user.lastname,
             consituencypercent: user.consituency.province,
             consituencynumber: user.consituency.consituencynumber,
-            RoleName: user.roleName as RoleName,
+            RoleName: user.role.map(r => r.roleName) as RoleName[],
         }
     });
 });

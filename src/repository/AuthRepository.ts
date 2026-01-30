@@ -1,6 +1,5 @@
 import {prisma} from '../lib/prisma'
-
-const ROLE_VOTER = 'VOTER' as const;
+import { RoleName } from '../../generated/prisma/enums';
 
 
 export async function registerUser(
@@ -20,14 +19,25 @@ export async function registerUser(
             nationalId: nationalId,
             firstname: firstName,
             lastname: lastName,
-            roleName: ROLE_VOTER,
             password: password,
-            consituencyID: consituencyId,
             address: address,
             subdistrict: subdistrict, 
             district: district, 
             province: province,
-        }
+            
+            consituency : {
+                connect: { id: consituencyId }
+            },
+
+            role:{
+                create: {
+                    roleName: RoleName.ROLE_ADMIN
+                }
+            }
+        },
+        include: {
+            role: true,
+        },
     });
 }
 
@@ -39,6 +49,7 @@ export async function findUserByNationalId(nationalId: string) {
         },
         include: {
             consituency: true,
-        },
+            role: true,
+        },  
     });
 }

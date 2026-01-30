@@ -27,11 +27,11 @@ export async function existingNationalId(registerRequest: RegisterRequest) {
     return authRepo.findUserByNationalId(registerRequest.nationalId);
 }
 
-export async function generatetoken(nationalId: string) {
+export async function generatetoken(nationalId: string, roles: string[], consituencyId: number | null) {
     if (!process.env.JWT_SECRET) {
         throw new Error('JWT_SECRET is not defined in environment variables');
     }  
-     return jwt.sign({ nationalId }, process.env.JWT_SECRET, { expiresIn: '1d' });
+     return jwt.sign({ nationalId, roles, consituencyId }, process.env.JWT_SECRET, { expiresIn: '1d' });
 }
 
 export async function getUserFromToken(token: string) {
@@ -39,7 +39,7 @@ export async function getUserFromToken(token: string) {
         throw new Error('JWT_SECRET is not defined in environment variables');
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
-    const user = await authRepo.findUserByNationalId(decoded.userId);
+    const user = await authRepo.findUserByNationalId(decoded.nationalId);
     return user;
 }   
 
