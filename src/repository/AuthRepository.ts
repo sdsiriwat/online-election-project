@@ -3,7 +3,6 @@ import {prisma} from '../lib/prisma'
 const ROLE_VOTER = 'VOTER' as const;
 
 
-
 export async function registerUser(
     nationalId: string,
     firstName: string,
@@ -16,8 +15,6 @@ export async function registerUser(
     password: string,
 
 ) {
-    
-
     return prisma.users.create({
        data: {
             nationalId: nationalId,
@@ -31,5 +28,17 @@ export async function registerUser(
             district: district, 
             province: province,
         }
+    });
+}
+
+
+export async function findUserByNationalId(nationalId: string) {
+    return prisma.users.findUnique({
+        where: {
+            nationalId: nationalId,
+        },
+        include: {
+            consituency: true,
+        },
     });
 }

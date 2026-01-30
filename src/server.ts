@@ -15,11 +15,9 @@ app.get('/', (req: Request, res: Response) => {
 })
 
 
-
 app.use('/auth', authRoutes)
 
 app.use('/cre', createConstituency)
-
 
 
 app.listen(port, () => {

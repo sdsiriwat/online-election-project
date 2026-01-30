@@ -1,10 +1,14 @@
-// src/services/AuthServices.ts
 import { RegisterRequest } from '../models/RegisterRequest';
+import { LoginRequest } from '../models/LoginRequest';
 import * as authRepo from '../repository/AuthRepository';
+
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'my-secret-key';
+
+
 export async function registerUser(registerRequest: RegisterRequest) {
-    // 1. Destructure ข้อมูลออกมา
     const { nationalId, firstname, lastname, address, province, district, subdistrict, consituencyId, password } = registerRequest;
     return await authRepo.registerUser(
         nationalId, 
@@ -18,3 +22,34 @@ export async function registerUser(registerRequest: RegisterRequest) {
         bcrypt.hashSync(password, 10)
     );
 }
+
+export async function existingNationalId(registerRequest: RegisterRequest) {
+    return authRepo.findUserByNationalId(registerRequest.nationalId);
+}
+
+export async function generatetoken(nationalId: string) {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+    }  
+     return jwt.sign({ nationalId }, process.env.JWT_SECRET, { expiresIn: '1d' });
+}
+
+export async function getUserFromToken(token: string) {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in environment variables');
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as jwt.JwtPayload;
+    const user = await authRepo.findUserByNationalId(decoded.userId);
+    return user;
+}   
+
+export async function comparePassword(password: string, hashedPassword: string) {
+    return bcrypt.compare(password, hashedPassword);
+
+}
+
+export async function findUserByNationalId(LoginRequest: LoginRequest) {
+    return authRepo.findUserByNationalId(LoginRequest.nationalId);
+}
+
+
