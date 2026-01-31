@@ -13,7 +13,16 @@ enum RoleName {
   ROLE_ECT
 }
 
-
+model electionsetting {
+  id                Int       @id @default(autoincrement())
+  electionname      String
+  startdate         DateTime
+  enddate           DateTime
+  starttime         String
+  endtime           String
+  isopen            Boolean   @default(true) 
+  updatedAt         DateTime  @updatedAt
+}
 
 model users {
   id                Int         @id @unique @default(autoincrement())
@@ -27,6 +36,7 @@ model users {
   district          String
   province          String
   consituencyID     Int
+  isactive          Boolean     @default(true)
   updatedAt         DateTime    @updatedAt
 
   role              role[]
@@ -64,18 +74,20 @@ model party {
   name       String      @unique
   imageurl   String?
   policy     String?
+
   candidates candidate[]
 }
 
 
 model candidate {
   id                  Int         @id @default(autoincrement())
-  candidateNumber     Int
+  candidatenumber     Int
   firstname           String
   lastname            String
   imageurl            String?
+  policy              String?
   consituencyId       Int
-  consituencyProvince String
+  consituencyprovince String
   partyId             Int
   createdAt           DateTime    @default(now())
   updatedAt           DateTime    @updatedAt
@@ -84,7 +96,7 @@ model candidate {
   party           party       @relation(fields: [partyId], references: [id])
   vote            vote[]
 
-  @@unique([candidateNumber,partyId, consituencyId, consituencyProvince])
+  @@unique([candidatenumber, consituencyId])
 }
 
 model vote {
@@ -96,6 +108,7 @@ model vote {
 
   candidate   candidate @relation(fields: [candidateId], references: [id])
   user        users     @relation(fields: [usersId], references: [id])
-  @@unique([usersId, candidateId])
+
+  @@unique([usersId])
 }
 
