@@ -1,5 +1,5 @@
 import {prisma} from '../lib/prisma'
-import { RoleName } from '../../generated/prisma/enums';
+import { RoleName } from '../generated/prisma/enums';
 
 
 export async function registerUser(
