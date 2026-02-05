@@ -61,7 +61,7 @@ model consituency {
   subdistrict         String
   district            String
   zipcode             String
-  isclosed            Boolean @default(true)
+  isclosed            Boolean @default(false)
 
   candidates candidate[]
   user       users[]
