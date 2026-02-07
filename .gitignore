@@ -45,7 +45,7 @@ desktop.ini
 .temp/
 
 # Prisma
-/generated/prisma
+/src/generated/prisma
 prisma/*.db
 prisma/*.db-journal
 
