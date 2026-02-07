@@ -2,7 +2,7 @@ import express from 'express';
 import { RegisterRequest } from '../models/RegisterRequest';
 import { LoginRequest } from '../models/LoginRequest';
 import * as authService from '../services/AuthServices';
-import { RoleName } from '../../generated/prisma/enums';
+import { RoleName } from '../generated/prisma/enums';
 import * as authMiddleware from '../middleware/AuthMiddleware';
 
 
