@@ -1,7 +1,7 @@
 import {prisma} from '../lib/prisma'
 import { RoleName } from '../generated/prisma/enums';
 
-// Repository functions for authentication and user management
+// Repository functions for authentication and user management and authorization V1
 
 export async function registerUser(
     nationalId: string,
@@ -73,5 +73,51 @@ export async function deleteUserRole(userId: number, roleName: RoleName) {
             usersId: userId,
             roleName: roleName,
         },
+    });
+}
+
+
+export async function getAllProvinces () {
+    return prisma.consituency.findMany({
+        distinct: ['province'],
+        select: { province: true },
+        orderBy: { province: 'asc' },
+    });
+    
+}
+
+export async function getDistrictsByProvince(province: string) {
+    return prisma.consituency.findMany({
+        where: {
+            province: province
+        },
+        distinct: ['district'],
+        select: { district: true },
+        orderBy: { district: 'asc' },
+    });
+}
+
+export async function getSubdistrictsByDistrict(province: string, district: string) {
+    return prisma.consituency.findMany({
+        where: {
+            province: province,
+            district: district
+        },
+        distinct: ['subdistrict'],
+        select: { subdistrict: true },
+        orderBy: { subdistrict: 'asc' },
+    });
+}
+
+export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
+    return prisma.consituency.findMany({
+        where: {
+            province: province,
+            district: district,
+            subdistrict: subdistrict
+        },
+        distinct: ['consituencynumber'],
+        select: { consituencynumber: true },
+        orderBy: { consituencynumber: 'asc' },
     });
 }

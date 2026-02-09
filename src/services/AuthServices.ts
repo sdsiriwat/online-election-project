@@ -5,7 +5,8 @@ import * as authRepo from '../repository/AuthRepository';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-// Authentication service functions
+// Authentication service functions and business logic v1
+
 const JWT_SECRET = process.env.JWT_SECRET || 'my-secret-key';
 
 
@@ -61,3 +62,25 @@ export async function addUserRole(userId:number, roleName:string) {
 export async function deleteUserRole(userId:number, roleName:string) {
     return authRepo.deleteUserRole(userId, roleName as any);
 }
+
+
+export async function getAllProvinces () {
+    const provinces = await  authRepo.getAllProvinces();
+    return provinces.map(item => item.province);
+}  
+
+export async function getDistrictsByProvince(province: string) {
+    const districts = await authRepo.getDistrictsByProvince(province);
+    return districts.map(item => item.district);
+}  
+
+export async function getSubdistrictsByDistrict(province: string, district: string) {
+    const subdistricts = await authRepo.getSubdistrictsByDistrict(province, district);
+    return subdistricts.map(item => item.subdistrict);
+}  
+
+export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
+    const consituencynumbers = await authRepo.getConstituencyNumberByDistrict(province, district, subdistrict);
+    return consituencynumbers.map(item => item.consituencynumber);
+}  
+

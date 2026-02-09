@@ -34,6 +34,65 @@ router.post('/register', async (req, res) => {
     }
 });
 
+router.get('/provinces', async (req, res) => {
+    try {
+        const provinces = await authService.getAllProvinces();
+        res.status(200).json({
+            status: 'success',
+            data: provinces
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+
+router.get('/districts/:province', async (req, res) => {
+    const province = req.params.province;
+    try {
+        const districts = await authService.getDistrictsByProvince(province);
+        res.status(200).json({
+            status: 'success',
+            data: districts
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+router.get('/subdistricts/:district', async (req, res) => {
+    const district = req.params.district;
+    const province = req.query.province as string;
+    try {
+        const subdistricts = await authService.getSubdistrictsByDistrict(province, district);
+        res.status(200).json({
+            status: 'success',
+            data: subdistricts
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
+router.get('/constituencynumbers/:subdistrict', async (req, res) => {
+    const subdistrict = req.params.subdistrict;
+    const district = req.query.district as string;
+    const province = req.query.province as string;
+    try {
+        const subdistricts = await authService.getConstituencyNumberByDistrict(province, district, subdistrict);
+        res.status(200).json({
+            status: 'success',
+            data: subdistricts
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
 
 router.post('/login', async (req, res) => {
     const loginRequest: LoginRequest = req.body;
