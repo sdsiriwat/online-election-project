@@ -1002,7 +1002,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ### 1. Register
 ```bash
-curl -X POST http://localhost:3000/auth/register \
+curl -X POST https://online-election-project.onrender.com/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "nationalId": "1234567890123",
@@ -1020,7 +1020,7 @@ curl -X POST http://localhost:3000/auth/register \
 
 ### 2. Login
 ```bash
-curl -X POST http://localhost:3000/auth/login \
+curl -X POST https://online-election-project.onrender.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "nationalId": "1234567890123",
@@ -1030,13 +1030,13 @@ curl -X POST http://localhost:3000/auth/login \
 
 ### 3. Get Profile (with token)
 ```bash
-curl -X GET http://localhost:3000/auth/profile \
+curl -X GET https://online-election-project.onrender.com/auth/profile \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 
 ### 4. Submit Vote
 ```bash
-curl -X POST http://localhost:3000/vote \
+curl -X POST https://online-election-project.onrender.com/vote \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
   -d '{
