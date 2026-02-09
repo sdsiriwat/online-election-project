@@ -9,16 +9,19 @@ const router = express.Router();
 router.post('/const', async (req, res) => {
     const request: ConstituencyRequest = req.body;
     try {
-        const newconstituency = await constituencyService.createConstituency(request);
-        res.status(201).json(newconstituency);
-        
+        const newconstituency = await constituencyService.createConstituency(request); 
+        res.status(201).json({
+            status: 'success',
+            message: 'สร้างเขตเลือกตั้งสำเร็จ',
+            data: newconstituency
+        });
     } catch (error: any) {
         console.error(error); 
 
         if (error.code === 'P2002') {
-            res.status(400).json({ message: 'เขตเลือกตั้งนี้มีอยู่ในระบบแล้ว' });
+            res.status(400).json({ status: 'error', message: 'เขตเลือกตั้งนี้มีอยู่ในระบบแล้ว' });
         } else {
-            res.status(500).json({ message: 'Internal Server Error' });
+            res.status(500).json({ status: 'error', message: 'Internal server error' });
         }
     }
 });

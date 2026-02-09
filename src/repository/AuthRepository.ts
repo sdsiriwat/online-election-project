@@ -1,6 +1,7 @@
 import {prisma} from '../lib/prisma'
 import { RoleName } from '../generated/prisma/enums';
 
+// Repository functions for authentication and user management
 
 export async function registerUser(
     nationalId: string,
@@ -50,6 +51,27 @@ export async function findUserByNationalId(nationalId: string) {
         include: {
             consituency: true,
             role: true,
-        },  
+        },
+
+    });
+}
+
+export async function addUserRole(userId: number, roleName: RoleName) {
+    return prisma.role.create({
+        data: {
+            usersId: userId,
+            roleName: roleName,
+        },
+    });
+
+}
+
+
+export async function deleteUserRole(userId: number, roleName: RoleName) {
+    return prisma.role.deleteMany({
+        where: {
+            usersId: userId,
+            roleName: roleName,
+        },
     });
 }

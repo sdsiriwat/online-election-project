@@ -18,7 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
-app.use('/cre', createConstituency)
+app.use('/constituency', createConstituency)
 app.use('/party', partyRoutes);
 
 
