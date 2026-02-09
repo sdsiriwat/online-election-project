@@ -35,7 +35,7 @@ export async function checkRole_admin_ect(req: Request, res: Response, next: Nex
     const user = req.body.user;
     const userRoles = user.role.map((r: any) => r.roleName);
 
-    if (user && userRoles.includes('ROLE_ADMIN','ROLE_ECT')) {  
+    if (user && (userRoles.includes('ROLE_ADMIN') || userRoles.includes('ROLE_ECT'))) {  
         next();
     } else {
         return res.status(403).json({ message: "You are not authorized to perform this action" });
