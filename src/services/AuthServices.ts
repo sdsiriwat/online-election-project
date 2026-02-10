@@ -80,7 +80,6 @@ export async function getSubdistrictsByDistrict(province: string, district: stri
 }  
 
 export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
-    const consituencynumbers = await authRepo.getConstituencyNumberByDistrict(province, district, subdistrict);
-    return consituencynumbers.map(item => item.consituencynumber);
+    return await authRepo.getConstituencyNumberByDistrict(province, district, subdistrict);
 }  
 

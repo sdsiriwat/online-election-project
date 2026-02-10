@@ -110,14 +110,15 @@ export async function getSubdistrictsByDistrict(province: string, district: stri
 }
 
 export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
-    return prisma.consituency.findMany({
+    return prisma.consituency.findFirst({
         where: {
             province: province,
             district: district,
             subdistrict: subdistrict
         },
-        distinct: ['consituencynumber'],
-        select: { consituencynumber: true },
-        orderBy: { consituencynumber: 'asc' },
+        select: { 
+            id: true,
+            consituencynumber: true 
+        },
     });
 }
