@@ -215,7 +215,60 @@ Error (403):
 
 ---
 
-### 5. เพิ่มบทบาทให้ผู้ใช้ (Add Role)
+### 5. ดึงรายชื่อผู้ใช้ทั้งหมด (Get All Users)
+
+**Endpoint:** `GET /auth/users`
+
+**Description:** ดึงรายชื่อผู้ใช้ทั้งหมดในระบบ พร้อมบทบาทของแต่ละคน (เฉพาะ Admin)
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin role)
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "nationalId": "1234567890123",
+      "firstname": "สมชาย",
+      "lastname": "ใจดี",
+      "role": [
+        {
+          "id": 1,
+          "roleName": "ROLE_VOTER"
+        },
+        {
+          "id": 2,
+          "roleName": "ROLE_ADMIN"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "nationalId": "3333333333333",
+      "firstname": "กรรฑกา",
+      "lastname": "เพื่อธรรม",
+      "role": [
+        {
+          "id": 3,
+          "roleName": "ROLE_ECT"
+        },
+        {
+          "id": 4,
+          "roleName": "ROLE_VOTER"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+### 6. เพิ่มบทบาทให้ผู้ใช้ (Add Role)
 
 **Endpoint:** `POST /auth/add-role`
 
@@ -260,7 +313,7 @@ Error (403):
 
 ---
 
-### 6. ลบบทบาทผู้ใช้ (Delete Role)
+### 7. ลบบทบาทผู้ใช้ (Delete Role)
 
 **Endpoint:** `DELETE /auth/delete-role`
 
@@ -296,7 +349,7 @@ Success (200):
 
 ---
 
-### 7. ดึงรายชื่อจังหวัดทั้งหมด (Get Provinces)
+### 8. ดึงรายชื่อจังหวัดทั้งหมด (Get Provinces)
 
 **Endpoint:** `GET /auth/provinces`
 
@@ -319,7 +372,7 @@ Success (200):
 
 ---
 
-### 8. ดึงรายชื่ออำเภอตามจังหวัด (Get Districts)
+### 9. ดึงรายชื่ออำเภอตามจังหวัด (Get Districts)
 
 **Endpoint:** `GET /auth/districts/:province`
 
@@ -351,7 +404,7 @@ Success (200):
 
 ---
 
-### 9. ดึงรายชื่อตำบลตามอำเภอ (Get Subdistricts)
+### 10. ดึงรายชื่อตำบลตามอำเภอ (Get Subdistricts)
 
 **Endpoint:** `GET /auth/subdistricts/:district?province=xxx`
 
@@ -386,7 +439,7 @@ Success (200):
 
 ---
 
-### 10. ดึงหมายเลขเขตเลือกตั้ง (Get Constituency Number)
+### 11. ดึงหมายเลขเขตเลือกตั้ง (Get Constituency Number)
 
 **Endpoint:** `GET /auth/constituencynumbers/:subdistrict?province=xxx&district=xxx`
 
@@ -1028,15 +1081,51 @@ curl -X POST https://online-election-project.onrender.com/auth/login \
   }'
 ```
 
-### 3. Get Profile (with token)
+### 3. Get All Users (Admin)
+```bash
+curl -X GET https://online-election-project.onrender.com/auth/users \
+  -H "Content-Type: application/json"
+```
+
+### 4. Get Profile (with token)
 ```bash
 curl -X GET https://online-election-project.onrender.com/auth/profile \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 
-### 4. Submit Vote
+### 5. Add Role (Admin)
+```bash
+curl -X POST https://online-election-project.onrender.com/auth/add-role \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -d '{
+    "userid": 3,
+    "roleName": "ROLE_ADMIN"
+  }'
+```
+
+### 6. Delete Role (Admin)
+```bash
+curl -X DELETE https://online-election-project.onrender.com/auth/delete-role \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -d '{
+    "userid": 3,
+    "roleName": "ROLE_ADMIN"
+  }'
+```
+
+### 7. Submit Vote
 ```bash
 curl -X POST https://online-election-project.onrender.com/vote \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+  -d '{
+    "userId": 1,
+    "consituencyId": 1,
+    "candidateId": 3
+  }'
+```
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
   -d '{
