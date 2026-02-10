@@ -5,7 +5,7 @@ import * as authRepo from '../repository/AuthRepository';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-// Authentication service functions and business logic v1
+
 
 const JWT_SECRET = process.env.JWT_SECRET || 'my-secret-key';
 
@@ -23,6 +23,10 @@ export async function registerUser(registerRequest: RegisterRequest) {
         consituencyId,
         bcrypt.hashSync(password, 10)
     );
+}
+
+export async function getAllUsers() {
+    return authRepo.getAllUsers();
 }
 
 export async function existingNationalId(registerRequest: RegisterRequest) {

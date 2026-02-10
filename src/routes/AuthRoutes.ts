@@ -34,6 +34,19 @@ router.post('/register', async (req, res) => {
     }
 });
 
+router.get('/users', async (req, res) => {
+    try {
+        const users = await authService.getAllUsers();
+        res.status(200).json({
+            status: 'success',
+            data: users
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
+
 router.get('/provinces', async (req, res) => {
     try {
         const provinces = await authService.getAllProvinces();
