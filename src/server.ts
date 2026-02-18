@@ -13,13 +13,13 @@ app.use(cors())
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
+  res.send('Hello World! เจอกันได้จ้า')
 })
 
-app.use("/", locationRoute);
+app.use("/locations", locationRoute);
 app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
-app.use('/cre', createConstituency)
+app.use('/cre', createConstituency) // ไม่ต้องแก ไปใช้ feauter/constituency
 
 
 app.listen(port, () => {
