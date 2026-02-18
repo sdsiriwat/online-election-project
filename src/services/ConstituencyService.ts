@@ -13,3 +13,11 @@ export async function createConstituency(requestConstituency: ConstituencyReques
         zipcode
     );
 }
+
+export async function getAllConstituencies(){
+    return await authRepo.getAllConstituencies()
+}
+
+export async function getConstituencyById(id : number){
+    return await authRepo.getConstituencyById(id)
+}

@@ -22,9 +22,9 @@ router.get('/:id', async (req, res) => {
         if (Number.isNaN(id)) {
             return res.status(400).json({ message: 'รหัสเขตเลือกตั้งไม่ถูกต้อง กรุณาใส่ตัวเลข' })
         }
-        const constituency = await constituencyService.getConstituencyByID(id)
+        const constituency = await constituencyService.getConstituencyById(id)
         if (!constituency) {
-            return res.status(404).json({ message: 'ไม่พบเขตเลือกตั้งที่' })
+            return res.status(404).json({ message: `ไม่พบเขตเลือกตั้ง ${id} ที่ท่านเลือก` })
         }
         res.status(200).json(constituency)
         

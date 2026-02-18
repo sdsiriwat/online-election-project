@@ -19,3 +19,22 @@ export async function createConstituency(
         }
     });
 }
+
+// อ่าน AllConstitutency
+export async function getAllConstituencies(){
+    return prisma.consituency.findMany({
+        orderBy:[
+            {province: `asc`},
+            {consituencynumber: `asc`},
+        ],
+    })
+}
+
+// อ่านแต่ id contitutency
+
+export async function getConstituencyById(id : number){
+    return prisma.consituency.findUnique({
+        where: {id},
+    })
+}
+
