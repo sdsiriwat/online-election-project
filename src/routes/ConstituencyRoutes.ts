@@ -5,16 +5,33 @@ import { ConstituencyRequest } from '../models/ConstituencyRequest';
 const router = express.Router();
 
 
-
 router.get('/', async (req, res) => {
     try {
+        if (Object.keys(req.query).length > 0) {
+            const result = await constituencyService.searchConstituencies(req.query)
+            return res.status(200).json(result)
+        }
         const constituencies = await constituencyService.getAllConstituencies()
         res.status(200).json(constituencies)
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error)
-        res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้ ต้องขออภัยในความไม่สะดวก' })
+        res.status(500).json({ message: 'ระบบไม่สามารให้บริการได้ในขณะนี้ ขออภัยในความไม่สะดวก' })
     }
 })
+
+// router.get('/', async (req, res) => {
+//     try {
+//         const constituencies = await constituencyService.getAllConstituencies()
+//         res.status(200).json(constituencies)
+//     } catch (error) {
+//         console.error(error)
+//         res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้ ต้องขออภัยในความไม่สะดวก' })
+//     }
+// })
+
+
+
 
 router.get('/:id', async (req, res) => {
     try {
@@ -27,12 +44,18 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ message: `ไม่พบเขตเลือกตั้ง ${id} ที่ท่านเลือก` })
         }
         res.status(200).json(constituency)
-        
+
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้' })
     }
 })
+
+
+
+
+
+
 
 
 router.post('/', async (req, res) => {
