@@ -112,3 +112,52 @@ model vote {
   @@unique([usersId])
 }
 
+
+model province {
+  code  String @id
+  nameTh String
+  nameEn String?
+  isActive Boolean
+
+  districts district[]
+  subdistricts subdistrict[]
+
+  @@index([nameTh])
+}
+
+model district{
+  code String @id
+  nameTh String
+  nameEn String?
+  isActive Boolean @default(true)
+
+  provinceCode String
+  province province @relation(fields: [provinceCode], references: [code], onDelete: Restrict)
+
+  subdistricts subdistrict[]
+
+  @@index([provinceCode])
+  @@index([nameTh])
+  @@unique([provinceCode,nameTh])
+
+}
+
+model subdistrict{
+  code String @id
+  nameTh String
+  nameEn String?
+  zipcode String?
+  isActive Boolean @default(true)
+
+  provinceCode String
+  districtCode String
+
+  province province @relation(fields: [provinceCode],references: [code],onDelete: Restrict)
+  district district @relation(fields: [districtCode],references: [code],onDelete: Restrict)
+
+  @@index([provinceCode,districtCode])
+  @@index([districtCode])
+  @@index([nameTh])
+  @@unique([districtCode,nameTh])
+
+}
