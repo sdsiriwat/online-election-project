@@ -7,13 +7,13 @@ export async function listProvinces(){
 
 
 //อำเภอ
-export async function listDistrictsByProvince(province: String){
+export async function listDistrictsByProvince(province: string){
   return repo.getDistrictsByProvince(province);
 }
 
 
 //ตำบล
-export async function listSubdistricts(province: String, district: String){
+export async function listSubdistricts(province: string, district: string){
   return repo.getSubdistricts(province,district);
 }
 
