@@ -3,72 +3,24 @@ import * as constituencyService from '../services/ConstituencyService';
 import { ConstituencyRequest } from '../models/ConstituencyRequest';
 
 
-router.get('/', async (req, res) => {
-    try {
-        if (Object.keys(req.query).length > 0) {
-            const result = await constituencyService.searchConstituencies(req.query)
-            return res.status(200).json(result)
-        }
-        const constituencies = await constituencyService.getAllConstituencies()
-        res.status(200).json(constituencies)
-    }
-    catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'ระบบไม่สามารให้บริการได้ในขณะนี้ ขออภัยในความไม่สะดวก' })
-    }
-})
+const router = express.Router();
 
-// router.get('/', async (req, res) => {
-//     try {
-//         const constituencies = await constituencyService.getAllConstituencies()
-//         res.status(200).json(constituencies)
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้ ต้องขออภัยในความไม่สะดวก' })
-//     }
-// })
-
-
-
-
-router.get('/:id', async (req, res) => {
-    try {
-        const id = Number(req.params.id)
-        if (Number.isNaN(id)) {
-            return res.status(400).json({ message: 'รหัสเขตเลือกตั้งไม่ถูกต้อง กรุณาใส่ตัวเลข' })
-        }
-        const constituency = await constituencyService.getConstituencyById(id)
-        if (!constituency) {
-            return res.status(404).json({ message: `ไม่พบเขตเลือกตั้ง ${id} ที่ท่านเลือก` })
-        }
-        res.status(200).json(constituency)
-
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้' })
-    }
-})
-
-
-
-
-
-
-
-
-router.post('/', async (req, res) => {
+router.post('/create', async (req, res) => {
     const request: ConstituencyRequest = req.body;
     try {
-        const newconstituency = await constituencyService.createConstituency(request);
-        res.status(201).json(newconstituency);
-
+        const newconstituency = await constituencyService.createConstituency(request); 
+        res.status(201).json({
+            status: 'success',
+            message: 'สร้างเขตเลือกตั้งสำเร็จ',
+            data: newconstituency
+        });
     } catch (error: any) {
-        console.error(error);
+        console.error(error); 
 
         if (error.code === 'P2002') {
             res.status(400).json({ status: 'error', message: 'เขตเลือกตั้งนี้มีอยู่ในระบบแล้ว' });
         } else {
-            res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้' });
+            res.status(500).json({ status: 'error', message: 'Internal server error' });
         }
     }
 });

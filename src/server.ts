@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import authRoutes from './routes/AuthRoutes'
-import ConstituencyRoutes from './routes/ConstituencyRoutes'
+import createConstituency from './routes/ConstituencyRoutes'
 import voterouter from './routes/VoteRoutes'
 import partyRoutes from './routes/PartyRoutes';
 
@@ -18,7 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
-app.use('/constituencies', ConstituencyRoutes) // cre-->constituencies
+app.use('/constituency', createConstituency)
 app.use('/party', partyRoutes);
 
 
