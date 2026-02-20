@@ -41,7 +41,23 @@ export async function registerUser(
     });
 }
 
-
+export async function getAllUsers() {
+    return prisma.users.findMany({
+        select: {
+            id: true,
+            nationalId: true,
+            firstname: true,
+            lastname: true,
+            role: {
+                select: {
+                    id: true,
+                    roleName: true,
+                },
+            },
+        },
+    });
+}
+    
 export async function findUserByNationalId(nationalId: string) {
     return prisma.users.findUnique({
         where: {
@@ -50,6 +66,74 @@ export async function findUserByNationalId(nationalId: string) {
         include: {
             consituency: true,
             role: true,
-        },  
+        },
+
+    });
+}
+
+export async function addUserRole(userId: number, roleName: RoleName) {
+    return prisma.role.create({
+        data: {
+            usersId: userId,
+            roleName: roleName,
+        },
+    });
+
+}
+
+
+export async function deleteUserRole(userId: number, roleName: RoleName) {
+    return prisma.role.deleteMany({
+        where: {
+            usersId: userId,
+            roleName: roleName,
+        },
+    });
+}
+
+
+export async function getAllProvinces () {
+    return prisma.consituency.findMany({
+        distinct: ['province'],
+        select: { province: true },
+        orderBy: { province: 'asc' },
+    });
+    
+}
+
+export async function getDistrictsByProvince(province: string) {
+    return prisma.consituency.findMany({
+        where: {
+            province: province
+        },
+        distinct: ['district'],
+        select: { district: true },
+        orderBy: { district: 'asc' },
+    });
+}
+
+export async function getSubdistrictsByDistrict(province: string, district: string) {
+    return prisma.consituency.findMany({
+        where: {
+            province: province,
+            district: district
+        },
+        distinct: ['subdistrict'],
+        select: { subdistrict: true },
+        orderBy: { subdistrict: 'asc' },
+    });
+}
+
+export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
+    return prisma.consituency.findFirst({
+        where: {
+            province: province,
+            district: district,
+            subdistrict: subdistrict
+        },
+        select: { 
+            id: true,
+            consituencynumber: true 
+        },
     });
 }

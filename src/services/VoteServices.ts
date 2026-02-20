@@ -2,6 +2,7 @@ import {prisma} from '../lib/prisma'
 import {VoteRequest} from '../models/VoteRequest';
 import * as authVost from '../repository/voteRepository';
 
+// Vote service functions and business logic
 
 export async function voteService(requestVote: VoteRequest) {
     const {userId, consituencyId, candidateId } = requestVote;
@@ -27,3 +28,6 @@ export async function voteService(requestVote: VoteRequest) {
 
 }
 
+export async function findVoteByUserId(userId: number){
+    return authVost.findVoteByUserId(userId);
+}
