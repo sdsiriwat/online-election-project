@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
+import locationRoute from "./routes/LocationRoute";
 import authRoutes from './routes/AuthRoutes'
 import createConstituency from './routes/ConstituencyRoutes'
 import voterouter from './routes/VoteRoutes'
@@ -13,9 +14,10 @@ app.use(cors())
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
+  res.send('Hello World! เจอกันได้จ้า')
 })
 
+app.use("/locations", locationRoute);
 app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
 app.use('/constituency', createConstituency)
