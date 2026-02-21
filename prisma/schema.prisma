@@ -65,13 +65,14 @@ model consituency {
 
   candidates candidate[]
   user       users[]
-  @@unique([province, consituencynumber])
+  @@unique([province, consituencynumber, subdistrict, district])
 }
 
 
 model party {
   id         Int         @id @default(autoincrement())
   name       String      @unique
+  color      String?
   imageurl   String?
   policy     String?
 

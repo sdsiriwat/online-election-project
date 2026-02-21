@@ -4,9 +4,10 @@ import locationRoute from "./routes/LocationRoute";
 import authRoutes from './routes/AuthRoutes'
 import createConstituency from './routes/ConstituencyRoutes'
 import voterouter from './routes/VoteRoutes'
+import partyRoutes from './routes/PartyRoutes';
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 app.use(express.json())
 app.use(cors())
 
@@ -19,7 +20,9 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/locations", locationRoute);
 app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
-app.use('/cre', createConstituency) // ไม่ต้องแก ไปใช้ feauter/constituency
+app.use('/constituency', createConstituency)
+app.use('/party', partyRoutes);
+
 
 
 app.listen(port, () => {

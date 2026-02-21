@@ -1,5 +1,6 @@
 import {prisma} from '../lib/prisma'
 
+// Repository functions for vote management
 export async function upsetVote(userId: number,candidateId: number){
     return prisma.vote.upsert({
         where: {
@@ -28,6 +29,14 @@ export async function candidateByID(candidateId: number){
     return prisma.candidate.findUnique({
         where: {
             id: candidateId
+        }
+    });
+}
+
+export async function findVoteByUserId(userId: number){
+    return prisma.vote.findUnique({
+        where: {
+            usersId: userId
         }
     });
 }

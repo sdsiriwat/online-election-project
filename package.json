@@ -1,14 +1,13 @@
 {
   "name": "online-election-project",
   "version": "1.0.0",
-  "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/server.js",
+    "start": "node dist/server.js",
     "seed": "prisma db seed",
     "dev": "nodemon --exec tsx src/server.ts",
-    "build": "tsc"
+    "build": "prisma generate && tsc"
     
   },
   "repository": {

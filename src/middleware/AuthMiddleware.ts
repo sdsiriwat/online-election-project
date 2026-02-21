@@ -2,7 +2,6 @@ import type { Request, Response, NextFunction } from 'express';
 import * as authService from '../services/AuthServices';
 
 
-
 export async function protect(req: Request, res: Response, next: NextFunction) {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -22,8 +21,8 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
             req.body = {};
         }
 
-        req.body.user = userInfo;
-
+        req.body.user = userInfo.user;
+        req.body.currentRole = userInfo.currentRole;
         next();
     }catch (error:unknown) {
         if (error instanceof Error && error.name === "JWT_SECRET is not definded") {
@@ -32,23 +31,33 @@ export async function protect(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function checkRole_admin(req: Request, res: Response, next: NextFunction) {
+export async function checkRole_admin_ect(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
     const userRoles = user.role.map((r: any) => r.roleName);
 
-    if (user && userRoles.includes('ROLE_ADMIN')) {  
+    if (user && (userRoles.includes('ROLE_ADMIN') || userRoles.includes('ROLE_ECT'))) {  
         next();
     } else {
         return res.status(403).json({ message: "You are not authorized to perform this action" });
     }
 }
 
+export async function checkRole_admin(req: Request, res: Response, next: NextFunction) {
+    const user = req.body.user;
+    const currentRole = req.body.currentRole;
+
+    if (user && currentRole === 'ROLE_ADMIN') {  
+        next();
+    } else {
+        return res.status(403).json({ message: "You are not authorized to perform this action" });
+    }
+}
 
 export async function checkRole_ect(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
-    const userRoles = user.role.map((r: any) => r.roleName);
+    const currentRole = req.body.currentRole;
 
-    if (user && userRoles.includes('ROLE_ECT')) {  
+    if (user && (currentRole === 'ROLE_ECT')) {  
         next();
     } else {
         return res.status(403).json({ message: "You are not authorized to perform this action" });
@@ -57,11 +66,11 @@ export async function checkRole_ect(req: Request, res: Response, next: NextFunct
 
 export async function checkRole_voter(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
-    const userRoles = user.role.map((r: any) => r.roleName);
+    const currentRole = req.body.currentRole;
 
-    if (user && userRoles.includes('ROLE_VOTER')) {  
+    if (user && currentRole === 'ROLE_VOTER') {  
         next();
     } else {
-        return res.status(403).json({ message: "You are not authorized to perform this action" });
+        return res.status(403).json({ message: "กรุณาสลับสิทธิผู้ใช้งานเป็น ผู้มีสิทธิเลือกตั้ง" });
     }
 }
