@@ -11,7 +11,8 @@
 
 */
 -- DropIndex
-DROP INDEX "consituency_province_consituencynumber_key";
+
+DROP INDEX IF EXISTS "consituency_province_consituencynumber_key";
 
 -- AlterTable
 ALTER TABLE "consituency" DROP COLUMN "district",
@@ -22,7 +23,7 @@ ADD COLUMN     "provinceCode" TEXT NOT NULL,
 ADD COLUMN     "subdistrictCode" TEXT NOT NULL;
 
 -- AlterTable
-ALTER TABLE "party" ADD COLUMN     "color" TEXT;
+-- ALTER TABLE "party" ADD COLUMN     "color" TEXT;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "consituency_id_key" ON "consituency"("id");

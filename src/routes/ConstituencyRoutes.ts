@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
         console.error(error);
 
         if (error.code === 'P2002') {
-            res.status(400).json({ status: 'error', message: 'เขตเลือกตั้งนี้มีอยู่ในระบบแล้ว' });
+            res.status(400).json({ message: 'เขตเลือกตั้งนี้มีอยู่ในระบบแล้ว' });
         } else {
             res.status(500).json({ message: 'ระบบไม่สามารถให้บริการได้ในขณะนี้' });
         }
