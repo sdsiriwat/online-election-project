@@ -3,19 +3,20 @@ import { prisma } from '../lib/prisma'
 
 export async function createConstituency(
     consituencynumber: number,
-    district: string,
-    subdistrict: string,
-    province: string,
+    districtCode: string,
+    subdistrictCode: string,
+    provinceCode: string,
     zipcode: string,
 
 ) {
     return prisma.consituency.create({
         data: {
-            consituencynumber: consituencynumber,
-            district: district,
-            subdistrict: subdistrict,
-            province: province,
-            zipcode: zipcode,
+            provinceCode,
+            districtCode,
+            subdistrictCode,
+            consituencynumber,
+            zipcode,
+            isclosed: false,
         }
     });
 }
@@ -24,7 +25,7 @@ export async function createConstituency(
 export async function getAllConstituencies() {
     return prisma.consituency.findMany({
         orderBy: [
-            { province: `asc` },
+            { provinceCode: `asc` },
             { consituencynumber: `asc` },
         ],
     })
@@ -56,7 +57,7 @@ export async function searchConstituencies(params: {
     return prisma.consituency.findMany({
         where,
         orderBy: [
-            { province: `asc` },
+            { provinceCode: `asc` },
             { consituencynumber: `asc` }],
     })
 }

@@ -4,13 +4,19 @@ import * as authRepo from '../repository/ConstituencyRepository';
 
 // Constituency service functions
 export async function createConstituency(requestConstituency: ConstituencyRequest) {
-    const { consituencynumber, district, subdistrict, province, zipcode } = requestConstituency;
+    const {
+        provinceCode,
+        districtCode,
+        subdistrictCode,
+        consituencynumber,
+        zipcode, } = requestConstituency;
+
     return await authRepo.createConstituency(
         consituencynumber,
-        district,
-        subdistrict,
-        province,
-        zipcode
+        districtCode,
+        subdistrictCode,
+        provinceCode,
+        zipcode,
     );
 }
 

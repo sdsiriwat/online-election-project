@@ -20,7 +20,7 @@ async function main() {
   console.log('Cleared existing data')
   console.log('Start seeding locations...')
 
-  // จังหวัดเชียงใหม่
+  // ข้อมูลจังหวัดเชียงใหม่
   await prisma.province.create({
     data: {
       code: "50",
@@ -30,7 +30,7 @@ async function main() {
     },
   })
 
-  // อำเภอเมืองเชียงใหม่
+  // ข้อมูลอำเภอเมืองเชียงใหม่
   await prisma.district.create({
     data: {
       code: "5001",
@@ -41,7 +41,7 @@ async function main() {
     },
   })
 
-  // ตำบลสุเทพ
+  // ข้อมูลตำบลสุเทพ
   await prisma.subdistrict.create({
     data: {
       code: "500101",
@@ -68,18 +68,30 @@ async function main() {
   })
   console.log('Created Election Settings')
 
-  const bkk1 = await prisma.consituency.create({
-    data: { province: 'กรุงเทพมหานคร', consituencynumber: 1, district: 'บางรัก', subdistrict: 'สี่พระยา', zipcode: '10500', isclosed: false }
-  })
-  const bkk2 = await prisma.consituency.create({
-    data: { province: 'กรุงเทพมหานคร', consituencynumber: 2, district: 'ปทุมวัน', subdistrict: 'รองเมือง', zipcode: '10330', isclosed: false }
-  })
+  // // const bkk1 = await prisma.consituency.create({
+  // //   data: { province: 'กรุงเทพมหานคร', consituencynumber: 1, district: 'บางรัก', subdistrict: 'สี่พระยา', zipcode: '10500', isclosed: false }
+  // // })
+  // // const bkk2 = await prisma.consituency.create({
+  // //   data: { province: 'กรุงเทพมหานคร', consituencynumber: 2, district: 'ปทุมวัน', subdistrict: 'รองเมือง', zipcode: '10330', isclosed: false }
+  // // })
+  // const cm1 = await prisma.consituency.create({
+  //   data: { province: 'เชียงใหม่', consituencynumber: 1, district: 'เมืองเชียงใหม่', subdistrict: 'สุเทพ', zipcode: '50200', isclosed: false }
+  // })
+  // console.log('Created Constituencies')
+
+  //สรา้งเขต
   const cm1 = await prisma.consituency.create({
-    data: { province: 'เชียงใหม่', consituencynumber: 1, district: 'เมืองเชียงใหม่', subdistrict: 'สุเทพ', zipcode: '50200', isclosed: false }
+    data: {
+      provinceCode: "50",
+      districtCode: "5001",
+      subdistrictCode: "500101",
+      consituencynumber: 1,
+      zipcode: "50200",
+      isclosed: false,
+    },
   })
 
-  console.log('Created Constituencies')
-
+  //สร้างพรรค
   const partyA = await prisma.party.create({
     data: {
       name: "พรรคก้าวไกล",
@@ -104,59 +116,74 @@ async function main() {
 
   console.log('reated Parties')
 
-  await prisma.candidate.create({
-    data: {
-      candidatenumber: 1, firstname: "สมชาย", lastname: "รักชาติ",
-      imageurl: "https://ui-avatars.com/api/?name=Somchai&background=random",
-      policy: "มุ่งมั่นพัฒนาเขตบางรักให้น่าอยู่",
-      consituencyId: bkk1.id, consituencyprovince: bkk1.province, partyId: partyA.id
-    }
-  })
-  await prisma.candidate.create({
-    data: {
-      candidatenumber: 2, firstname: "วิภา", lastname: "ใจดี",
-      imageurl: "https://ui-avatars.com/api/?name=Wipa&background=random",
-      policy: "เน้นเศรษฐกิจชุมชนและการท่องเที่ยว",
-      consituencyId: bkk1.id, consituencyprovince: bkk1.province, partyId: partyB.id
-    }
-  })
+  //สร้างผู้สมัคร
 
-  // เขต 1 เชียงใหม่
+  const cmProvince = await prisma.province.findUnique({ where: { code: "50" } })
   await prisma.candidate.create({
     data: {
-      candidatenumber: 1, firstname: "เหนือ", lastname: "ชายดอย",
+      candidatenumber: 1,
+      firstname: "เหนือ",
+      lastname: "ชายดอย",
       imageurl: "https://ui-avatars.com/api/?name=Nuea&background=random",
       policy: "แก้ปัญหาฝุ่น PM 2.5 อย่างยั่งยืน",
-      consituencyId: cm1.id, consituencyprovince: cm1.province, partyId: partyA.id
-    }
+      consituencyId: cm1.id,
+      consituencyprovince: cmProvince?.nameTh ?? "เชียงใหม่",
+      partyId: partyA.id,
+    },
   })
+  // await prisma.candidate.create({
+  //   data: {
+  //     candidatenumber: 1, firstname: "สมชาย", lastname: "รักชาติ",
+  //     imageurl: "https://ui-avatars.com/api/?name=Somchai&background=random",
+  //     policy: "มุ่งมั่นพัฒนาเขตบางรักให้น่าอยู่",
+  //     consituencyId: bkk1.id, consituencyprovince: bkk1.province, partyId: partyA.id
+  //   }
+  // })
+  // await prisma.candidate.create({
+  //   data: {
+  //     candidatenumber: 2, firstname: "วิภา", lastname: "ใจดี",
+  //     imageurl: "https://ui-avatars.com/api/?name=Wipa&background=random",
+  //     policy: "เน้นเศรษฐกิจชุมชนและการท่องเที่ยว",
+  //     consituencyId: bkk1.id, consituencyprovince: bkk1.province, partyId: partyB.id
+  //   }
+  // })
+
+  // เขต 1 เชียงใหม่
+  // await prisma.candidate.create({
+  //   data: {
+  //     candidatenumber: 1, firstname: "เหนือ", lastname: "ชายดอย",
+  //     imageurl: "https://ui-avatars.com/api/?name=Nuea&background=random",
+  //     policy: "แก้ปัญหาฝุ่น PM 2.5 อย่างยั่งยืน",
+  //     consituencyId: cm1.id, consituencyprovince: cm1.province, partyId: partyA.id
+  //   }
+  // })
 
   console.log('Created Candidates')
   const passwordHash = bcrypt.hashSync('123456', 10); // รหัสผ่าน default: 123456
 
   // 6.1 User with 1 Role (VOTER) - ประชาชนทั่วไป
-  await prisma.users.create({
-    data: {
-      nationalId: "1111111111111",
-      firstname: "สมศักดิ์", lastname: "พลเมือง",
-      password: passwordHash,
-      address: "123 ถ.สีลม", district: "บางรัก", subdistrict: "สี่พระยา", province: "กรุงเทพมหานคร",
-      consituencyID: bkk1.id,
-      role: { create: { roleName: 'ROLE_VOTER' } }
-    }
-  })
+  // await prisma.users.create({
+  //   data: {
+  //     nationalId: "1111111111111",
+  //     firstname: "สมศักดิ์", lastname: "พลเมือง",
+  //     password: passwordHash,
+  //     address: "123 ถ.สีลม", district: "บางรัก", subdistrict: "สี่พระยา", province: "กรุงเทพมหานคร",
+  //     consituencyID: bkk1.id,
+  //     role: { create: { roleName: 'ROLE_VOTER' } }
+  //   }
+  // })
 
   // 6.2 User with 1 Role (ADMIN) - ผู้ดูแลระบบ
-  await prisma.users.create({
-    data: {
-      nationalId: "2222222222222",
-      firstname: "Admin", lastname: "System",
-      password: passwordHash,
-      address: "Server Room", district: "ปทุมวัน", subdistrict: "รองเมือง", province: "กรุงเทพมหานคร",
-      consituencyID: bkk2.id, // Admin อาจจะผูกหรือไม่ผูกเขตก็ได้ แต่ใส่ไว้กัน Null
-      role: { create: { roleName: 'ROLE_ADMIN' } }
-    }
-  })
+  // await prisma.users.create({
+  //   data: {
+  //     nationalId: "2222222222222",
+  //     firstname: "Admin", lastname: "System",
+  //     password: passwordHash,
+  //     address: "Server Room", district: "ปทุมวัน", subdistrict: "รองเมือง", province: "กรุงเทพมหานคร",
+  //     consituencyID: bkk2.id, // Admin อาจจะผูกหรือไม่ผูกเขตก็ได้ แต่ใส่ไว้กัน Null
+  //     role: { create: { roleName: 'ROLE_ADMIN' } }
+  //   }
+  // })
 
   // 6.3 User with 2 Roles (ECT + VOTER) - กกต. ที่มีสิทธิ์เลือกตั้งด้วย
   await prisma.users.create({
@@ -176,22 +203,22 @@ async function main() {
   })
 
   // 6.4 User with 3 Roles (ADMIN + ECT + VOTER) - Super User
-  await prisma.users.create({
-    data: {
-      nationalId: "4444444444444",
-      firstname: "Super", lastname: "User",
-      password: passwordHash,
-      address: "Cloud", district: "บางรัก", subdistrict: "สี่พระยา", province: "กรุงเทพมหานคร",
-      consituencyID: bkk1.id,
-      role: {
-        create: [
-          { roleName: 'ROLE_ADMIN' },
-          { roleName: 'ROLE_ECT' },
-          { roleName: 'ROLE_VOTER' }
-        ]
-      }
-    }
-  })
+  // await prisma.users.create({
+  //   data: {
+  //     nationalId: "4444444444444",
+  //     firstname: "Super", lastname: "User",
+  //     password: passwordHash,
+  //     address: "Cloud", district: "บางรัก", subdistrict: "สี่พระยา", province: "กรุงเทพมหานคร",
+  //     consituencyID: bkk1.id,
+  //     role: {
+  //       create: [
+  //         { roleName: 'ROLE_ADMIN' },
+  //         { roleName: 'ROLE_ECT' },
+  //         { roleName: 'ROLE_VOTER' }
+  //       ]
+  //     }
+  //   }
+  // })
 
   console.log('Seeding finished.')
 }
