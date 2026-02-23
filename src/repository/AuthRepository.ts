@@ -94,9 +94,9 @@ export async function deleteUserRole(userId: number, roleName: RoleName) {
 
 export async function getAllProvinces () {
     return prisma.consituency.findMany({
-        distinct: ['province'],
+        distinct: ['provinceCode'],
         select: { province: true },
-        orderBy: { province: 'asc' },
+        orderBy: ({ province: 'asc' } as any),
     });
     
 }
@@ -104,32 +104,32 @@ export async function getAllProvinces () {
 export async function getDistrictsByProvince(province: string) {
     return prisma.consituency.findMany({
         where: {
-            province: province
+            provinceCode: province
         },
-        distinct: ['district'],
+        distinct: ['districtCode'],
         select: { district: true },
-        orderBy: { district: 'asc' },
+        orderBy: ({ district: 'asc' } as any),
     });
 }
 
 export async function getSubdistrictsByDistrict(province: string, district: string) {
     return prisma.consituency.findMany({
         where: {
-            province: province,
-            district: district
+            provinceCode: province,
+            districtCode: district
         },
-        distinct: ['subdistrict'],
+        distinct: ['subdistrictCode'],
         select: { subdistrict: true },
-        orderBy: { subdistrict: 'asc' },
+        orderBy: ({ subdistrict: 'asc' } as any),
     });
 }
 
 export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
     return prisma.consituency.findFirst({
         where: {
-            province: province,
-            district: district,
-            subdistrict: subdistrict
+            provinceCode: province,
+            districtCode: district,
+            subdistrictCode: subdistrict
         },
         select: { 
             id: true,
