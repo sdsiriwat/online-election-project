@@ -6,6 +6,8 @@ import ConstituencyRoutes from './routes/ConstituencyRoutes'
 import voterouter from './routes/VoteRoutes'
 import partyRoutes from './routes/PartyRoutes';
 import candidateRoutes from "./routes/CandidateRoutes";
+import uploadfile from './routes/UploadFileRoutes';
+
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -24,6 +26,9 @@ app.use('/auth', authRoutes)
 app.use('/constituencies', ConstituencyRoutes) // cre-->constituencies
 app.use('/party', partyRoutes);
 app.use("/candidates", candidateRoutes);
+app.use('/uploadfile', uploadfile);
+
+
 
 
 app.listen(port, () => {

@@ -140,7 +140,7 @@ router.post('/login', async (req, res) => {
             nationalId: user.nationalId,
             firstname: user.firstname,
             lastname: user.lastname,
-            consituencypercent: user.consituency.province,
+            consituencypercent: user.consituency.provinceCode,
             consituencynumber: user.consituency.consituencynumber,
             rolename: user.role.map(r => r.roleName) as RoleName[],
             currentRole: currentRole
