@@ -5,6 +5,7 @@ import authRoutes from './routes/AuthRoutes'
 import ConstituencyRoutes from './routes/ConstituencyRoutes'
 import voterouter from './routes/VoteRoutes'
 import partyRoutes from './routes/PartyRoutes';
+import candidateRoutes from "./routes/CandidateRoutes";
 import uploadfile from './routes/UploadFileRoutes';
 
 
@@ -24,6 +25,7 @@ app.use('/vote', voterouter)
 app.use('/auth', authRoutes)
 app.use('/constituencies', ConstituencyRoutes) // cre-->constituencies
 app.use('/party', partyRoutes);
+app.use("/candidates", candidateRoutes);
 app.use('/uploadfile', uploadfile);
 
 
