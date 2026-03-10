@@ -9,6 +9,17 @@ router.post("/", async (req, res) => {
 
     const request: CandidateRequest = req.body
 
+    if (
+        !request.candidatenumber ||
+        !request.firstname ||
+        !request.lastname ||
+        !request.consituencyId ||
+        !request.partyId
+    ) {
+        return res.status(400).json({
+            message: "ข้อมูลผู้สมัครไม่ครบถ้วน"
+        })
+    }
     try {
         const candidate = await candidateService.createCandidate(request)
         res.status(201).json(candidate)
