@@ -83,22 +83,75 @@ router.put("/:id", async (req, res) => {
     try {
 
         const id = Number(req.params.id)
+
         if (Number.isNaN(id)) {
             return res.status(400).json({
-                message: "เบอร์ผู้สมัครไม่ถูกต้อง"
+                message: "เบอร์ผู้สมัครไม่ถูกต้อง กรุณาใส่ตัวเลข"
+            })
+        }
+
+        const existing = await candidateService.getCandidateById(id)
+        if (!existing) {
+            return res.status(404).json({
+                message: "ไม่พบผู้สมัครที่ต้องการแก้ไข"
             })
         }
 
         const request: CandidateRequest = req.body
         const candidate = await candidateService.updateCandidate(id, request)
+
         res.status(200).json(candidate)
-    } catch (error) {
+
+    } catch (error: any) {
         console.error(error)
 
+        if (error.code === "P2002") {
+            return res.status(400).json({
+                message: "เบอร์ผู้สมัครนี้มีอยู่ในเขตเลือกตั้ง"
+            })
+        }
         res.status(500).json({
             message: "ไม่สามารถแก้ไขข้อมูลของผู้สมัครได้"
         })
     }
+})
+
+router.delete("/:id", async (req, res) => {
+
+    try {
+
+        const id = Number(req.params.id)
+
+        if (Number.isNaN(id)) {
+            return res.status(400).json({
+                message: "รหัสผู้สมัครไม่ถูกต้อง กรุณาใส่ตัวเลข"
+            })
+        }
+
+        const existing = await candidateService.getCandidateById(id)
+
+        if (!existing) {
+            return res.status(404).json({
+                message: "ไม่พบผู้สมัครที่ต้องการลบ"
+            })
+        }
+
+        const candidate = await candidateService.deleteCandidate(id)
+
+        res.status(200).json({
+            message: "ลบผู้สมัครสำเร็จ",
+            data: candidate
+        })
+
+    } catch (error) {
+
+        console.error(error)
+
+        res.status(500).json({
+            message: "ไม่สามารถลบข้อมูลผู้สมัครได้"
+        })
+    }
+
 })
 
 

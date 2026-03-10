@@ -62,3 +62,9 @@ export async function updateCandidate(
     })
 }
 
+export async function deleteCandidate(id: number) {
+    return prisma.candidate.delete({
+        where: { id }
+    })
+}
+

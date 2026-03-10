@@ -41,3 +41,7 @@ export async function getCandidateById(id: number) {
 export async function updateCandidate(id: number, request: CandidateRequest) {
     return await candidateRepo.updateCandidate(id, request)
 }
+
+export async function deleteCandidate(id: number) {
+    return await candidateRepo.deleteCandidate(id)
+}
