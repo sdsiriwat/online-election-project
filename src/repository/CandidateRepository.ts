@@ -52,3 +52,13 @@ export async function getCandidateById(id: number) {
     })
 }
 
+export async function updateCandidate(
+    id: number,
+    data: any
+) {
+    return prisma.candidate.update({
+        where: { id },
+        data
+    })
+}
+

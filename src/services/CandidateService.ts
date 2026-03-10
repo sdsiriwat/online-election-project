@@ -37,3 +37,7 @@ export async function getAllCandidates(query: any) {
 export async function getCandidateById(id: number) {
     return await candidateRepo.getCandidateById(id)
 }
+
+export async function updateCandidate(id: number, request: CandidateRequest) {
+    return await candidateRepo.updateCandidate(id, request)
+}

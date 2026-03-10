@@ -79,5 +79,27 @@ router.get("/:id", async (req, res) => {
     }
 })
 
+router.put("/:id", async (req, res) => {
+    try {
+
+        const id = Number(req.params.id)
+        if (Number.isNaN(id)) {
+            return res.status(400).json({
+                message: "เบอร์ผู้สมัครไม่ถูกต้อง"
+            })
+        }
+
+        const request: CandidateRequest = req.body
+        const candidate = await candidateService.updateCandidate(id, request)
+        res.status(200).json(candidate)
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({
+            message: "ไม่สามารถแก้ไขข้อมูลของผู้สมัครได้"
+        })
+    }
+})
+
 
 export default router
