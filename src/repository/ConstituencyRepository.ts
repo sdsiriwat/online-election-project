@@ -49,9 +49,9 @@ export async function searchConstituencies(params: {
 }) {
     const where: any = {}
 
-    if (params.province) where.province = params.province
-    if (params.district) where.district = params.district
-    if (params.subdistrict) where.subdistrict = params.subdistrict
+    if (params.province) where.province = { nameTh: params.province }
+    if (params.district) where.district = { nameTh: params.district }
+    if (params.subdistrict) where.subdistrict = { nameTh: params.subdistrict }
     if (typeof params.consituencynumber === 'number') where.consituencynumber = params.consituencynumber
 
     return prisma.consituency.findMany({
@@ -60,28 +60,6 @@ export async function searchConstituencies(params: {
             { provinceCode: `asc` },
             { consituencynumber: `asc` }],
     })
-}
-
-
-export async function updateConstituency(id: number, 
-    province?: string,
-    consituencynumber?: number,
-    subdistrictCode?: string,
-    district?: string,
-    zipcode?: string,
-) {
-    return prisma.consituency.update({
-        where: {
-            id: id,
-        },
-        data: {
-            ...(province && { province: { connect: { code: province } } }),
-            consituencynumber,
-            ...(subdistrictCode && { subdistrict: { connect: { code: subdistrictCode } } }),
-            ...(district && { district: { connect: { code: district } } }),
-            zipcode,
-        },
-    });
 }
 
 export async function deleteConstituency(id: number) {
