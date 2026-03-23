@@ -62,6 +62,8 @@ curl -X GET https://online-election-project.onrender.com/auth/profile \
 | **Vote APIs** |
 | POST | `/vote` | ลงคะแนนเลือกตั้ง | ✅ | VOTER |
 | GET | `/vote/:userId` | ดูประวัติการลงคะแนน | ✅ | - |
+| GET | `/vote/count/:candidateId` | นับคะแนนเสียงตาม candidateId | ❌ | - |
+| GET | `/vote/total/count` | นับคะแนนเสียงทั้งหมด | ❌ | - |
 | **Party APIs** |
 | POST | `/party` | สร้างพรรคการเมืองใหม่ | ❌ | - |
 | GET | `/party` | ดึงรายชื่อพรรคทั้งหมด | ❌ | - |
@@ -78,6 +80,11 @@ curl -X GET https://online-election-project.onrender.com/auth/profile \
 | GET | `/constituencies` | ดึงรายชื่อเขตเลือกตั้งทั้งหมด | ❌ | - |
 | GET | `/constituencies/:id` | ดึงข้อมูลเขตเลือกตั้งตาม ID | ❌ | - |
 | POST | `/constituencies` | สร้างเขตเลือกตั้งใหม่ | ❌ | - |
+| DELETE | `/constituencies/:id` | ลบเขตเลือกตั้ง | ❌ | - |
+| PUT | `/constituencies/open/all` | เปิดการเลือกตั้งทุกเขต | ❌ | - |
+| PUT | `/constituencies/close/all` | ปิดการเลือกตั้งทุกเขต | ❌ | - |
+| PUT | `/constituencies/open/:id` | เปิดการเลือกตั้งเขตเฉพาะ | ❌ | - |
+| PUT | `/constituencies/close/:id` | ปิดการเลือกตั้งเขตเฉพาะ | ❌ | - |
 | **Location APIs** |
 | GET | `/locations/provinces` | ดึงรายชื่อจังหวัดทั้งหมด | ❌ | - |
 | GET | `/locations/districts` | ดึงรายชื่ออำเภอตามจังหวัด | ❌ | - |
@@ -765,6 +772,61 @@ Success (200):
     }
   }
 }
+```
+
+---
+
+### 3. นับคะแนนเสียงตาม Candidate (Count Votes by Candidate)
+
+**Endpoint:** `GET /vote/count/:candidateId`
+
+**Description:** นับจำนวนคะแนนเสียงที่ผู้สมัครได้รับ
+
+**Authentication:** ไม่ต้องการ
+
+**Path Parameters:**
+- `candidateId` (number) - ID ของผู้สมัคร
+
+**Example:** `GET /vote/count/3`
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "data": 245
+}
+```
+
+**cURL Example:**
+```bash
+curl -X GET https://online-election-project.onrender.com/vote/count/3
+```
+
+---
+
+### 4. นับคะแนนเสียงทั้งหมด (Count Total Votes)
+
+**Endpoint:** `GET /vote/total/count`
+
+**Description:** นับจำนวนคะแนนเสียงทั้งหมดในระบบ
+
+**Authentication:** ไม่ต้องการ
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "data": 15847
+}
+```
+
+**cURL Example:**
+```bash
+curl -X GET https://online-election-project.onrender.com/vote/total/count
 ```
 
 ---
@@ -1592,6 +1654,196 @@ curl -X POST https://online-election-project.onrender.com/constituencies \
     "subdistrictCode": "คลองเตย",
     "zipcode": "10110"
   }'
+```
+
+---
+
+### 4. ลบเขตเลือกตั้ง (Delete Constituency)
+
+**Endpoint:** `DELETE /constituencies/:id`
+
+**Description:** ลบเขตเลือกตั้งออกจากระบบ
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin role)
+
+**Path Parameters:**
+- `id` (number) - ID ของเขตเลือกตั้ง
+
+**Example:** `DELETE /constituencies/1`
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "message": "ลบเขตเลือกตั้งสำเร็จ",
+  "data": {
+    "id": 1,
+    "consituencynumber": 1,
+    "provinceCode": "กรุงเทพมหานคร",
+    "districtCode": "คลองเตย",
+    "subdistrictCode": "คลองเตย",
+    "zipcode": "10110",
+    "isclosed": false,
+    "createdAt": "2026-02-09T10:30:00.000Z"
+  }
+}
+```
+
+Error (500):
+```json
+{
+  "status": "error",
+  "message": "มีผู้มีสิทธิ์เลือกตั้งในเขตเลือกตั้งนี้ อยู่ในระบบ ไม่สามารถลบได้"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE https://online-election-project.onrender.com/constituencies/1
+```
+
+---
+
+### 5. เปิดการเลือกตั้งทุกเขต (Open All Constituencies)
+
+**Endpoint:** `PUT /constituencies/open/all`
+
+**Description:** เปิดการเลือกตั้งให้ทุกเขตเลือกตั้ง (isclosed = false)
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin/ECT role)
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "message": "เปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ"
+}
+```
+
+Error (500):
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT https://online-election-project.onrender.com/constituencies/open/all
+```
+
+---
+
+### 6. ปิดการเลือกตั้งทุกเขต (Close All Constituencies)
+
+**Endpoint:** `PUT /constituencies/close/all`
+
+**Description:** ปิดการเลือกตั้งให้ทุกเขตเลือกตั้ง (isclosed = true)
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin/ECT role)
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "message": "ปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ"
+}
+```
+
+Error (500):
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT https://online-election-project.onrender.com/constituencies/close/all
+```
+
+---
+
+### 7. เปิดการเลือกตั้งเขตเฉพาะ (Open Specific Constituency)
+
+**Endpoint:** `PUT /constituencies/open/:id`
+
+**Description:** เปิดการเลือกตั้งให้เขตเลือกตั้งที่ระบุ (isclosed = false)
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin/ECT role)
+
+**Path Parameters:**
+- `id` (number) - ID ของเขตเลือกตั้ง
+
+**Example:** `PUT /constituencies/open/1`
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "message": "เปิดการเลือกตั้งเขตที่ 1 สำเร็จ"
+}
+```
+
+Error (500):
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT https://online-election-project.onrender.com/constituencies/open/1
+```
+
+---
+
+### 8. ปิดการเลือกตั้งเขตเฉพาะ (Close Specific Constituency)
+
+**Endpoint:** `PUT /constituencies/close/:id`
+
+**Description:** ปิดการเลือกตั้งให้เขตเลือกตั้งที่ระบุ (isclosed = true)
+
+**Authentication:** ไม่ต้องการ (แนะนำให้เพิ่ม Admin/ECT role)
+
+**Path Parameters:**
+- `id` (number) - ID ของเขตเลือกตั้ง
+
+**Example:** `PUT /constituencies/close/1`
+
+**Response:**
+
+Success (200):
+```json
+{
+  "status": "success",
+  "message": "ปิดการเลือกตั้งเขตที่ 1 สำเร็จ"
+}
+```
+
+Error (500):
+```json
+{
+  "status": "error",
+  "message": "Internal server error"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT https://online-election-project.onrender.com/constituencies/close/1
 ```
 
 ---
