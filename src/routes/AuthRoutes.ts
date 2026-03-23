@@ -67,6 +67,7 @@ router.put('/update/profile', authMiddleware.protect, async (req, res) => {
 });
 
 
+
 router.get('/users', async (req, res) => {
     try {
         const users = await authService.getAllUsers();
@@ -192,6 +193,7 @@ router.get('/profile', authMiddleware.protect, async (req, res) => {
             nationalId: user.nationalId,
             firstname: user.firstname,
             lastname: user.lastname,
+            imageurl: user.imageurl,
             consituencypercent: user.consituency.province,
             consituencynumber: user.consituency.consituencynumber,
             rolename: user.role.map((r: { roleName: string; }) => r.roleName) as RoleName[],
