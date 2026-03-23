@@ -1,6 +1,6 @@
 import {prisma} from '../lib/prisma'
 
-// Repository functions for vote management
+// Repository functions for vote management and database interactions
 export async function upsetVote(userId: number,candidateId: number){
     return prisma.vote.upsert({
         where: {
@@ -38,5 +38,23 @@ export async function findVoteByUserId(userId: number){
         where: {
             usersId: userId
         }
+    });
+}
+
+
+export async function countVotesByCandidateId (candidateId: number){
+    return prisma.vote.groupBy({
+        by: ['candidateId'],
+        where: {
+            candidateId: candidateId
+        },
+        _count: {
+            candidateId: true
+        }
+    });
+}
+
+export async function totalVotes_all(): Promise<number> {
+    return prisma.vote.count({
     });
 }

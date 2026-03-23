@@ -2,7 +2,7 @@ import { ConstituencyRequest } from '../models/ConstituencyRequest';
 import * as authRepo from '../repository/ConstituencyRepository';
 
 
-// Constituency service functions
+// Constituency service functions and business logic for handling constituency-related operations
 export async function createConstituency(requestConstituency: ConstituencyRequest) {
     const {
         provinceCode,
@@ -36,4 +36,25 @@ export async function searchConstituencies(query: any) {
         consituencynumber: query.consituencynumber ? Number(query.consituencynumber) : undefined,
     }
     return await authRepo.searchConstituencies(params)
+}
+
+
+export async function deleteConstituency(id: number) {
+    return authRepo.deleteConstituency(id);
+}  
+
+export async function openConstituencyElection(id: number) {
+    return authRepo.openConstituencyElection(id);
+}
+
+export async function closeConstituencyElection(id: number) {
+    return authRepo.closeConstituencyElection(id);
+}
+
+export async function openConstituencyElectionAll() {
+    return authRepo.openConstituencyElectionAll();
+}
+
+export async function closeConstituencyElectionAll() {
+    return authRepo.closeConstituencyElectionAll();
 }
