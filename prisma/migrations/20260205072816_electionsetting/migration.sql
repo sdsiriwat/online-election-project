@@ -1,5 +1,19 @@
 -- CreateEnum
-CREATE TYPE "RoleName" AS ENUM ('ADMIN', 'VOTER', 'ECT');
+CREATE TYPE "RoleName" AS ENUM ('ROLE_ADMIN', 'ROLE_VOTER', 'ROLE_ECT');
+
+-- CreateTable
+CREATE TABLE "electionsetting" (
+    "id" SERIAL NOT NULL,
+    "electionname" TEXT NOT NULL,
+    "startdate" TIMESTAMP(3) NOT NULL,
+    "enddate" TIMESTAMP(3) NOT NULL,
+    "starttime" TEXT NOT NULL,
+    "endtime" TEXT NOT NULL,
+    "isopen" BOOLEAN NOT NULL DEFAULT true,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "electionsetting_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -13,10 +27,8 @@ CREATE TABLE "users" (
     "subdistrict" TEXT NOT NULL,
     "district" TEXT NOT NULL,
     "province" TEXT NOT NULL,
-    "postalCode" TEXT NOT NULL,
-    "consituencynumber" INTEGER NOT NULL,
-    "roleName" "RoleName" NOT NULL DEFAULT 'VOTER',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "consituencyID" INTEGER NOT NULL,
+    "isactive" BOOLEAN NOT NULL DEFAULT true,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
@@ -35,7 +47,11 @@ CREATE TABLE "role" (
 CREATE TABLE "consituency" (
     "id" SERIAL NOT NULL,
     "province" TEXT NOT NULL,
-    "number" INTEGER NOT NULL,
+    "consituencynumber" INTEGER NOT NULL,
+    "subdistrict" TEXT NOT NULL,
+    "district" TEXT NOT NULL,
+    "zipcode" TEXT NOT NULL,
+    "isclosed" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "consituency_pkey" PRIMARY KEY ("id")
 );
@@ -53,13 +69,14 @@ CREATE TABLE "party" (
 -- CreateTable
 CREATE TABLE "candidate" (
     "id" SERIAL NOT NULL,
+    "candidatenumber" INTEGER NOT NULL,
     "firstname" TEXT NOT NULL,
     "lastname" TEXT NOT NULL,
     "imageurl" TEXT,
+    "policy" TEXT,
+    "consituencyId" INTEGER NOT NULL,
     "consituencyprovince" TEXT NOT NULL,
-    "consituencynumber" INTEGER NOT NULL,
     "partyId" INTEGER NOT NULL,
-    "isclosed" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -77,14 +94,6 @@ CREATE TABLE "vote" (
     CONSTRAINT "vote_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "_consituencyTousers" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-
-    CONSTRAINT "_consituencyTousers_AB_pkey" PRIMARY KEY ("A","B")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
 
@@ -92,37 +101,34 @@ CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
 CREATE UNIQUE INDEX "users_nationalId_key" ON "users"("nationalId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "consituency_province_number_key" ON "consituency"("province", "number");
+CREATE UNIQUE INDEX "role_usersId_roleName_key" ON "role"("usersId", "roleName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "consituency_province_consituencynumber_key" ON "consituency"("province", "consituencynumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "party_name_key" ON "party"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "candidate_consituencyprovince_consituencynumber_key" ON "candidate"("consituencyprovince", "consituencynumber");
+CREATE UNIQUE INDEX "candidate_candidatenumber_consituencyId_key" ON "candidate"("candidatenumber", "consituencyId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "vote_usersId_candidateId_key" ON "vote"("usersId", "candidateId");
+CREATE UNIQUE INDEX "vote_usersId_key" ON "vote"("usersId");
 
--- CreateIndex
-CREATE INDEX "_consituencyTousers_B_index" ON "_consituencyTousers"("B");
+-- AddForeignKey
+ALTER TABLE "users" ADD CONSTRAINT "users_consituencyID_fkey" FOREIGN KEY ("consituencyID") REFERENCES "consituency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "role" ADD CONSTRAINT "role_usersId_fkey" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "candidate" ADD CONSTRAINT "candidate_consituencyprovince_consituencynumber_fkey" FOREIGN KEY ("consituencyprovince", "consituencynumber") REFERENCES "consituency"("province", "number") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "candidate" ADD CONSTRAINT "candidate_consituencyId_fkey" FOREIGN KEY ("consituencyId") REFERENCES "consituency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "candidate" ADD CONSTRAINT "candidate_partyId_fkey" FOREIGN KEY ("partyId") REFERENCES "party"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "vote" ADD CONSTRAINT "vote_usersId_fkey" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "vote" ADD CONSTRAINT "vote_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_consituencyTousers" ADD CONSTRAINT "_consituencyTousers_A_fkey" FOREIGN KEY ("A") REFERENCES "consituency"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_consituencyTousers" ADD CONSTRAINT "_consituencyTousers_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "vote" ADD CONSTRAINT "vote_usersId_fkey" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

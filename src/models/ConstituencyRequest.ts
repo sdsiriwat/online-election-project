@@ -1,9 +1,8 @@
 export interface ConstituencyRequest {
-          
-          consituencynumber: number;
-          address: string; 
-          district: string;
-          subdistrict: string;
-          province: string;
-          zipcode: string;
+    consituencynumber: number;
+    districtCode: string;
+    subdistrictCode: string;
+    provinceCode: string;
+    zipcode: string;
+
 }
