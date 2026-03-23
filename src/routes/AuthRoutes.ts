@@ -34,15 +34,27 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
 // update profile route for users to update their own profile information, protected by authentication middleware
 
 router.put('/update/profile', authMiddleware.protect, async (req, res) => {
-    const user = req.body.user;
+    const user = req.body.user; 
     const { nationalId, firstname, lastname, imageurl, address, subdistrict, district, province, consituencyID } = req.body;
-    
-    const updateData = { nationalId, firstname, lastname, imageurl, address, subdistrict, district, province, consituencyID };
+    const updateData = { 
+        nationalId, 
+        firstname, 
+        lastname, 
+        imageurl, 
+        address, 
+        subdistrict, 
+        district, 
+        province, 
+        consituencyID: consituencyID ? Number(consituencyID) : undefined 
+    };
+
     try {
-       const updatedUser = await authService.updateProfile(user.id, updateData);
+        const updatedUser = await authService.updateProfile(user.id, updateData);
+        
         res.status(200).json({
             status: 'success',
             message: 'Profile updated successfully',
@@ -53,7 +65,6 @@ router.put('/update/profile', authMiddleware.protect, async (req, res) => {
         res.status(500).json({ status: 'error', message: 'Internal server error' });
     }
 });
-
 
 
 router.get('/users', async (req, res) => {

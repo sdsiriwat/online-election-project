@@ -26,20 +26,18 @@ export async function registerUser(registerRequest: RegisterRequest) {
 }
 
 
-export async function updateProfile(id : number, nationalId?: string, firstname?: string, lastname?: string, imageurl?: string, address?: string, subdistrict?: string, district?: string, province?: string, consituencyID?: number) {
-    return await authRepo.updateprofile(
-        id,
-        nationalId,
-        firstname,
-        lastname,
-        undefined,
-        imageurl,
-        address,
-        subdistrict,
-        district,
-        province,
-        consituencyID
-    );
+export async function updateProfile(id: number, data: {
+    nationalId?: string,
+    firstname?: string,
+    lastname?: string,
+    imageurl?: string,
+    address?: string,
+    subdistrict?: string,
+    district?: string,
+    province?: string,
+    consituencyID?: number,
+}) {
+    return await authRepo.updateProfile(id, data);
 }
 
 
@@ -85,6 +83,7 @@ export async function addUserRole(userId:number, roleName:string) {
 export async function deleteUserRole(userId:number, roleName:string) {
     return authRepo.deleteUserRole(userId, roleName as any);
 }
+
 
 
 // export async function getAllProvinces () {
