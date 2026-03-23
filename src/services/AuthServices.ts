@@ -25,6 +25,25 @@ export async function registerUser(registerRequest: RegisterRequest) {
     );
 }
 
+
+export async function updateProfile(id : number, nationalId?: string, firstname?: string, lastname?: string, imageurl?: string, address?: string, subdistrict?: string, district?: string, province?: string, consituencyID?: number) {
+    return await authRepo.updateprofile(
+        id,
+        nationalId,
+        firstname,
+        lastname,
+        undefined,
+        imageurl,
+        address,
+        subdistrict,
+        district,
+        province,
+        consituencyID
+    );
+}
+
+
+
 export async function getAllUsers() {
     return authRepo.getAllUsers();
 }
@@ -68,22 +87,22 @@ export async function deleteUserRole(userId:number, roleName:string) {
 }
 
 
-export async function getAllProvinces () {
-    const provinces = await  authRepo.getAllProvinces();
-    return provinces.map(item => item.province);
-}  
+// export async function getAllProvinces () {
+//     const provinces = await  authRepo.getAllProvinces();
+//     return provinces.map(item => item.province);
+// }  
 
-export async function getDistrictsByProvince(province: string) {
-    const districts = await authRepo.getDistrictsByProvince(province);
-    return districts.map(item => item.district);
-}  
+// export async function getDistrictsByProvince(province: string) {
+//     const districts = await authRepo.getDistrictsByProvince(province);
+//     return districts.map(item => item.district);
+// }  
 
-export async function getSubdistrictsByDistrict(province: string, district: string) {
-    const subdistricts = await authRepo.getSubdistrictsByDistrict(province, district);
-    return subdistricts.map(item => item.subdistrict);
-}  
+// export async function getSubdistrictsByDistrict(province: string, district: string) {
+//     const subdistricts = await authRepo.getSubdistrictsByDistrict(province, district);
+//     return subdistricts.map(item => item.subdistrict);
+// }  
 
-export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
-    return await authRepo.getConstituencyNumberByDistrict(province, district, subdistrict);
-}  
+// export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
+//     return await authRepo.getConstituencyNumberByDistrict(province, district, subdistrict);
+// }  
 

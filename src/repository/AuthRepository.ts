@@ -91,49 +91,66 @@ export async function deleteUserRole(userId: number, roleName: RoleName) {
     });
 }
 
-
-export async function getAllProvinces () {
-    return prisma.consituency.findMany({
-        distinct: ['provinceCode'],
-        select: { province: true },
-        orderBy: ({ province: 'asc' } as any),
+// Update user profile information, allowing users to update their own profile details such as name, address, and constituency information
+export async function updateProfile(id: number, data: {
+    nationalId?: string,
+    firstname?: string,
+    lastname?: string,
+    imageurl?: string,
+    address?: string,
+    subdistrict?: string,
+    district?: string,
+    province?: string,
+    consituencyID?: number,
+}) {
+    return prisma.users.update({
+        where: { id },
+        data: data
     });
+}
+
+// export async function getAllProvinces () {
+//     return prisma.consituency.findMany({
+//         distinct: ['provinceCode'],
+//         select: { province: true },
+//         orderBy: ({ province: 'asc' } as any),
+//     });
     
-}
+// }
 
-export async function getDistrictsByProvince(province: string) {
-    return prisma.consituency.findMany({
-        where: {
-            provinceCode: province
-        },
-        distinct: ['districtCode'],
-        select: { district: true },
-        orderBy: ({ district: 'asc' } as any),
-    });
-}
+// export async function getDistrictsByProvince(province: string) {
+//     return prisma.consituency.findMany({
+//         where: {
+//             provinceCode: province
+//         },
+//         distinct: ['districtCode'],
+//         select: { district: true },
+//         orderBy: ({ district: 'asc' } as any),
+//     });
+// }
 
-export async function getSubdistrictsByDistrict(province: string, district: string) {
-    return prisma.consituency.findMany({
-        where: {
-            provinceCode: province,
-            districtCode: district
-        },
-        distinct: ['subdistrictCode'],
-        select: { subdistrict: true },
-        orderBy: ({ subdistrict: 'asc' } as any),
-    });
-}
+// export async function getSubdistrictsByDistrict(province: string, district: string) {
+//     return prisma.consituency.findMany({
+//         where: {
+//             provinceCode: province,
+//             districtCode: district
+//         },
+//         distinct: ['subdistrictCode'],
+//         select: { subdistrict: true },
+//         orderBy: ({ subdistrict: 'asc' } as any),
+//     });
+// }
 
-export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
-    return prisma.consituency.findFirst({
-        where: {
-            provinceCode: province,
-            districtCode: district,
-            subdistrictCode: subdistrict
-        },
-        select: { 
-            id: true,
-            consituencynumber: true 
-        },
-    });
-}
+// export async function getConstituencyNumberByDistrict(province: string, district: string, subdistrict: string) {
+//     return prisma.consituency.findFirst({
+//         where: {
+//             provinceCode: province,
+//             districtCode: district,
+//             subdistrictCode: subdistrict
+//         },
+//         select: { 
+//             id: true,
+//             consituencynumber: true 
+//         },
+//     });
+// }
