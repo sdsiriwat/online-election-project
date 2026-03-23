@@ -91,7 +91,7 @@ export async function deleteUserRole(userId: number, roleName: RoleName) {
     });
 }
 
-// Update user profile information, allowing users to update their own profile details such as name, address, and constituency information
+// update profile function for users to update their own profile information
 export async function updateProfile(id: number, data: {
     nationalId?: string,
     firstname?: string,
@@ -108,6 +108,8 @@ export async function updateProfile(id: number, data: {
         data: data
     });
 }
+
+
 
 // export async function getAllProvinces () {
 //     return prisma.consituency.findMany({
