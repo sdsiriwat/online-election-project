@@ -30,4 +30,22 @@ router.get('/:userId', authMiddleware.protect,  async (req, res) => {
         });
 });
 
+router.get('/count/:candidateId', async (req, res) => {
+    const candidateId = Number(req.params.candidateId);
+    const voteCount = await voteService.countVotesByCandidateId(candidateId);
+    res.status(200).json({
+        status: 'success',
+        data: voteCount
+    });
+});
+
+router.get('/total/count', async (req, res) => {
+    const totalVotes = await voteService.totalVotes_all();
+    res.status(200).json({
+        status: 'success',        data: totalVotes
+    });
+});
+
+
+
 export default router;
