@@ -103,6 +103,7 @@ model candidate {
   vote        vote[]
 
   @@unique([candidatenumber, consituencyId])
+  @@unique([partyId, consituencyId])
 }
 
 model vote {
