@@ -118,7 +118,7 @@ router.put("/:id", async (req, res) => {
 
         if (error.code === "P2002") {
             return res.status(400).json({
-                message: "เบอร์ผู้สมัครนี้มีอยู่ในเขตเลือกตั้ง"
+                message: "พรรคนี้มีผู้สมัครในเขตเลือกตั้งนี้แล้ว หรือหมายเลขผู้สมัครซ้ำ"
             })
         }
         res.status(500).json({

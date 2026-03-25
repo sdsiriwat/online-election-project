@@ -1,4 +1,4 @@
-import { consituency } from "../generated/prisma/client"
+
 
 export interface CandidateRequest {
     candidatenumber: number
