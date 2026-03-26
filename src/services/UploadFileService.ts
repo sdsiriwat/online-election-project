@@ -1,4 +1,4 @@
-import s3Client from '../awsConfig';
+import s3Client, { SUPABASE_URL } from '../awsConfig';
 import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomBytes } from 'crypto'
@@ -47,6 +47,11 @@ export async function getPresignedUrl(bucket: string, filePath: string, expiresI
         throw error;
     }
 
+}
+
+export function getPublicUrl(bucket: string, filePath: string): string {
+    
+    return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${filePath}`;
 }
 
 
