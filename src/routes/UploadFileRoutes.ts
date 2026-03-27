@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import { Request, Response } from 'express';
-import { uploadFile, getPresignedUrl } from '../services/UploadFileService';
+import { uploadFile, getPresignedUrl, getPublicUrl } from '../services/UploadFileService';
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -44,6 +44,19 @@ router.get('/presignedUrl', async (req: Request, res: Response) => {
 });
 
 
-
+router.get('/getpublicurl', async (req: Request, res: Response) => {
+    try {
+        const { key } = req.query;        
+        if (!key || typeof key !== 'string') {
+            return res.status(400).send('File key is required.');
+        }        
+        const bucket = 'images';
+        const publicUrl = await getPublicUrl(bucket, key);
+        res.status(200).json({ url: publicUrl });
+   } catch (error) {
+        console.error('Error generating public URL:', error);
+        res.status(500).send('Error generating public URL.');
+    }
+});
 
 export default router;

@@ -44,9 +44,9 @@ export async function checkRole_admin_ect(req: Request, res: Response, next: Nex
 
 export async function checkRole_admin(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
-    const currentRole = req.body.currentRole;
+    const userRoles = user.role.map((r: any) => r.roleName);
 
-    if (user && currentRole === 'ROLE_ADMIN') {  
+    if (user && userRoles.includes('ROLE_ADMIN')) {  
         next();
     } else {
         return res.status(403).json({ message: "You are not authorized to perform this action" });
@@ -55,9 +55,9 @@ export async function checkRole_admin(req: Request, res: Response, next: NextFun
 
 export async function checkRole_ect(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
-    const currentRole = req.body.currentRole;
+    const userRoles = user.role.map((r: any) => r.roleName);
 
-    if (user && (currentRole === 'ROLE_ECT')) {  
+    if (user && userRoles.includes('ROLE_ECT')) {  
         next();
     } else {
         return res.status(403).json({ message: "You are not authorized to perform this action" });
@@ -66,9 +66,9 @@ export async function checkRole_ect(req: Request, res: Response, next: NextFunct
 
 export async function checkRole_voter(req: Request, res: Response, next: NextFunction) {
     const user = req.body.user;
-    const currentRole = req.body.currentRole;
+    const userRoles = user.role.map((r: any) => r.roleName);
 
-    if (user && currentRole === 'ROLE_VOTER') {  
+    if (user && userRoles.includes('ROLE_VOTER')) {  
         next();
     } else {
         return res.status(403).json({ message: "กรุณาสลับสิทธิผู้ใช้งานเป็น ผู้มีสิทธิเลือกตั้ง" });

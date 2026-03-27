@@ -110,3 +110,49 @@ export async function searchConstituencies(params: {
     })
 }
 
+export async function deleteConstituency(id: number) {
+    return prisma.consituency.delete({
+        where: {
+            id: id,
+        },
+    });
+}
+
+export async function openConstituencyElection(id: number) {
+    return prisma.consituency.update({
+        where: {
+            id: id,
+        },
+        data: {
+            isclosed: false,
+        },
+    });
+}
+
+export async function closeConstituencyElection(id: number) {
+    return prisma.consituency.update({
+        where: {
+            id: id,
+        },
+        data: {
+            isclosed: true,
+        },
+    });
+}
+
+
+export async function openConstituencyElectionAll() {
+    return prisma.consituency.updateMany({
+        data: {
+            isclosed: false,
+        },
+    });
+}
+
+export async function closeConstituencyElectionAll() {
+    return prisma.consituency.updateMany({
+        data: {
+            isclosed: true,
+        },
+    });
+}

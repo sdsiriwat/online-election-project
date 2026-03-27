@@ -33,7 +33,7 @@ function formatConstituency(constituency: ConstituencyItem) {
 }
 
 
-// Constituency service functions
+// Constituency service functions and business logic for handling constituency-related operations
 export async function createConstituency(requestConstituency: ConstituencyRequest) {
     const {
         provinceCode,

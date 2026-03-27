@@ -4,6 +4,8 @@ import { ConstituencyRequest } from '../models/ConstituencyRequest';
 
 const router = express.Router();
 
+// Routes for constituency management, including creating, retrieving, updating, and deleting constituencies
+
 router.get('/', async (req, res) => {
     try {
         if (Object.keys(req.query).length > 0) {
@@ -69,18 +71,18 @@ router.post('/', async (req, res) => {
     }
 });
 
-// router.get('/all', async (req, res) => {
-//     try {
-//         const constituencies = await constituencyService.getAllConstituencies();
-//         res.status(200).json({
-//             status: 'success',
-//             data: constituencies
-//         });
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'Internal server error' });
-//     }
-// });
+router.get('/', async (req, res) => {
+    try {
+        const constituencies = await constituencyService.getAllConstituencies();
+        res.status(200).json({
+            status: 'success',
+            data: constituencies
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
 
 // router.get('/:id', async (req, res) => {
 //     const id = parseInt(req.params.id, 10);
@@ -96,74 +98,74 @@ router.post('/', async (req, res) => {
 //     }
 // });
 
-// router.delete('/:id', async (req, res) => {
-//     const id = parseInt(req.params.id, 10);
-//     try {
-//         const deletedconstituency = await constituencyService.deleteConstituency(id);
-//         res.status(200).json({
-//             status: 'success',
-//             message: 'ลบเขตเลือกตั้งสำเร็จ',
-//             data: deletedconstituency
-//         });
-//     }
-//     catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'มีผู้มีสิทธิ์เลือกตั้งในเขตเลือกตั้งนี้ อยู่ในระบบ ไม่สามารถลบได้' });
-//     }
-// });
+router.delete('/:id', async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const deletedconstituency = await constituencyService.deleteConstituency(id);
+        res.status(200).json({
+            status: 'success',
+            message: 'ลบเขตเลือกตั้งสำเร็จ',
+            data: deletedconstituency
+        });
+    }
+    catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'มีผู้มีสิทธิ์เลือกตั้งในเขตเลือกตั้งนี้ อยู่ในระบบ ไม่สามารถลบได้' });
+    }
+});
 
-// router.put('/open/all', async (req, res) => {
-//     try {
-//         await constituencyService.openConstituencyElectionAll();
-//         res.status(200).json({
-//             status: 'success',
-//             message: 'เปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ',
-//         });
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'Internal server error' });
-//     }
-// });
+router.put('/open/all', async (req, res) => {
+    try {
+        await constituencyService.openConstituencyElectionAll();
+        res.status(200).json({
+            status: 'success',
+            message: 'เปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ',
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
 
-// router.put('/close/all', async (req, res) => {
-//     try {
-//         await constituencyService.closeConstituencyElectionAll();
-//         res.status(200).json({
-//             status: 'success',
-//             message: 'ปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ',
-//         });
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'Internal server error' });
-//     }
-// });
+router.put('/close/all', async (req, res) => {
+    try {
+        await constituencyService.closeConstituencyElectionAll();
+        res.status(200).json({
+            status: 'success',
+            message: 'ปิดการเลือกตั้งในทุกเขตเลือกตั้งสำเร็จ',
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
 
-// router.put('/open/:id', async (req, res) => {
-//     const id = parseInt(req.params.id, 10);
-//     try {
-//         const openedconstituency = await constituencyService.openConstituencyElection(id);
-//         res.status(200).json({
-//             status: 'success',
-//             message: `เปิดการเลือกตั้งในจังหวัด${openedconstituency.province} เขตที่ ${openedconstituency.consituencynumber} สำเร็จ`,
-//         });
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'Internal server error' });
-//     }
-// });
+router.put('/open/:id', async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const openedconstituency = await constituencyService.openConstituencyElection(id);
+        res.status(200).json({
+            status: 'success',
+            message: `เปิดการเลือกตั้งเขตที่ ${openedconstituency.consituencynumber} สำเร็จ`,
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
 
-// router.put('/close/:id', async (req, res) => {
-//     const id = parseInt(req.params.id, 10);
-//     try {
-//         const closedconstituency = await constituencyService.closeConstituencyElection(id);
-//         res.status(200).json({
-//             status: 'success',
-//             message: `ปิดการเลือกตั้งในจังหวัด ${closedconstituency.province} เขตที่ ${closedconstituency.consituencynumber} สำเร็จ`,
-//         });
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(500).json({ status: 'error', message: 'Internal server error' });
-//     }
-// });
+router.put('/close/:id', async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    try {
+        const closedconstituency = await constituencyService.closeConstituencyElection(id);
+        res.status(200).json({
+            status: 'success',
+            message: `ปิดการเลือกตั้งเขตที่ ${closedconstituency.consituencynumber} สำเร็จ`,
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ status: 'error', message: 'Internal server error' });
+    }
+});
 
 export default router;
