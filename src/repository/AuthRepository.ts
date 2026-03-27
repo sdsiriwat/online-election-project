@@ -1,11 +1,11 @@
-import {prisma} from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 import { RoleName } from '../generated/prisma/enums';
 
 
 export async function registerUser(
     nationalId: string,
     firstName: string,
-    lastName: string,         
+    lastName: string,
     address: string,
     province: string,
     district: string,
@@ -15,21 +15,21 @@ export async function registerUser(
 
 ) {
     return prisma.users.create({
-       data: {
+        data: {
             nationalId: nationalId,
             firstname: firstName,
             lastname: lastName,
             password: password,
             address: address,
-            subdistrict: subdistrict, 
-            district: district, 
+            subdistrict: subdistrict,
+            district: district,
             province: province,
-            
-            consituency : {
+
+            consituency: {
                 connect: { id: consituencyId }
             },
 
-            role:{
+            role: {
                 create: {
                     roleName: RoleName.ROLE_VOTER
                 }
@@ -57,7 +57,7 @@ export async function getAllUsers() {
         },
     });
 }
-    
+
 export async function findUserByNationalId(nationalId: string) {
     return prisma.users.findUnique({
         where: {
@@ -92,13 +92,13 @@ export async function deleteUserRole(userId: number, roleName: RoleName) {
 }
 
 
-export async function getAllProvinces () {
+export async function getAllProvinces() {
     return prisma.consituency.findMany({
         distinct: ['provinceCode'],
         select: { province: true },
         orderBy: ({ province: 'asc' } as any),
     });
-    
+
 }
 
 export async function getDistrictsByProvince(province: string) {
@@ -113,14 +113,18 @@ export async function getDistrictsByProvince(province: string) {
 }
 
 export async function getSubdistrictsByDistrict(province: string, district: string) {
-    return prisma.consituency.findMany({
+    return prisma.consituencySubdistrict.findMany({
         where: {
-            provinceCode: province,
-            districtCode: district
+            consituency: {
+                provinceCode: province,
+                districtCode: district,
+            },
         },
         distinct: ['subdistrictCode'],
-        select: { subdistrict: true },
-        orderBy: ({ subdistrict: 'asc' } as any),
+        select: {
+            subdistrict: true,
+        },
+        orderBy: ({ subdistrictCode: 'asc' } as any),
     });
 }
 
@@ -129,11 +133,15 @@ export async function getConstituencyNumberByDistrict(province: string, district
         where: {
             provinceCode: province,
             districtCode: district,
-            subdistrictCode: subdistrict
+            subdistricts: {
+                some: {
+                    subdistrictCode: subdistrict,
+                },
+            },
         },
-        select: { 
+        select: {
             id: true,
-            consituencynumber: true 
+            consituencynumber: true
         },
     });
 }
