@@ -80,3 +80,23 @@ export async function searchConstituencies(query: any) {
     const constituencies = await authRepo.searchConstituencies(params)
     return constituencies.map(formatConstituency)
 }
+
+export async function deleteConstituency(id: number) {
+    return authRepo.deleteConstituency(id);
+}  
+
+export async function openConstituencyElection(id: number) {
+    return authRepo.openConstituencyElection(id);
+}
+
+export async function closeConstituencyElection(id: number) {
+    return authRepo.closeConstituencyElection(id);
+}
+
+export async function openConstituencyElectionAll() {
+    return authRepo.openConstituencyElectionAll();
+}
+
+export async function closeConstituencyElectionAll() {
+    return authRepo.closeConstituencyElectionAll();
+}
