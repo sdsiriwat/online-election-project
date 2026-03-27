@@ -1,6 +1,301 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../src/lib/prisma";
 
+type SeedProvince = {
+  code: string
+  nameTh: string
+  nameEn: string
+  isActive: boolean
+}
+
+type SeedSubdistrict = {
+  code: string
+  nameTh: string
+  nameEn: string
+  zipcode: string
+  isActive: boolean
+  provinceCode: string
+  districtCode: string
+}
+
+type SeedDistrict = {
+  code: string
+  nameTh: string
+  nameEn: string
+  isActive: boolean
+  provinceCode: string
+  subdistricts: SeedSubdistrict[]
+}
+
+type SeedLocation = {
+  region: string
+  province: SeedProvince
+  districts: SeedDistrict[]
+}
+
+const representativeLocations: SeedLocation[] = [
+  {
+    region: "north",
+    province: {
+      code: "50",
+      nameTh: "เชียงใหม่",
+      nameEn: "Chiang Mai",
+      isActive: true,
+    },
+    districts: [
+      {
+        code: "5001",
+        nameTh: "เมืองเชียงใหม่",
+        nameEn: "Mueang Chiang Mai",
+        isActive: true,
+        provinceCode: "50",
+        subdistricts: [
+          {
+            code: "500101",
+            nameTh: "สุเทพ",
+            nameEn: "Suthep",
+            zipcode: "50200",
+            isActive: true,
+            provinceCode: "50",
+            districtCode: "5001",
+          },
+          {
+            code: "500107",
+            nameTh: "ศรีภูมิ",
+            nameEn: "Si Phum",
+            zipcode: "50200",
+            isActive: true,
+            provinceCode: "50",
+            districtCode: "5001",
+          },
+        ],
+      },
+      {
+        code: "5007",
+        nameTh: "แม่ริม",
+        nameEn: "Mae Rim",
+        isActive: true,
+        provinceCode: "50",
+        subdistricts: [
+          {
+            code: "500701",
+            nameTh: "ริมใต้",
+            nameEn: "Rim Tai",
+            zipcode: "50180",
+            isActive: true,
+            provinceCode: "50",
+            districtCode: "5007",
+          },
+          {
+            code: "500703",
+            nameTh: "แม่สา",
+            nameEn: "Mae Sa",
+            zipcode: "50180",
+            isActive: true,
+            provinceCode: "50",
+            districtCode: "5007",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    region: "central",
+    province: {
+      code: "10",
+      nameTh: "กรุงเทพมหานคร",
+      nameEn: "Bangkok",
+      isActive: true,
+    },
+    districts: [
+      {
+        code: "1007",
+        nameTh: "ปทุมวัน",
+        nameEn: "Pathum Wan",
+        isActive: true,
+        provinceCode: "10",
+        subdistricts: [
+          {
+            code: "100701",
+            nameTh: "รองเมือง",
+            nameEn: "Rong Mueang",
+            zipcode: "10330",
+            isActive: true,
+            provinceCode: "10",
+            districtCode: "1007",
+          },
+          {
+            code: "100703",
+            nameTh: "วังใหม่",
+            nameEn: "Wang Mai",
+            zipcode: "10330",
+            isActive: true,
+            provinceCode: "10",
+            districtCode: "1007",
+          },
+        ],
+      },
+      {
+        code: "1004",
+        nameTh: "บางรัก",
+        nameEn: "Bang Rak",
+        isActive: true,
+        provinceCode: "10",
+        subdistricts: [
+          {
+            code: "100401",
+            nameTh: "สีลม",
+            nameEn: "Si Lom",
+            zipcode: "10500",
+            isActive: true,
+            provinceCode: "10",
+            districtCode: "1004",
+          },
+          {
+            code: "100402",
+            nameTh: "สุริยวงศ์",
+            nameEn: "Suriyawong",
+            zipcode: "10500",
+            isActive: true,
+            provinceCode: "10",
+            districtCode: "1004",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    region: "northeast",
+    province: {
+      code: "40",
+      nameTh: "ขอนแก่น",
+      nameEn: "Khon Kaen",
+      isActive: true,
+    },
+    districts: [
+      {
+        code: "4001",
+        nameTh: "เมืองขอนแก่น",
+        nameEn: "Mueang Khon Kaen",
+        isActive: true,
+        provinceCode: "40",
+        subdistricts: [
+          {
+            code: "400101",
+            nameTh: "ในเมือง",
+            nameEn: "Nai Mueang",
+            zipcode: "40000",
+            isActive: true,
+            provinceCode: "40",
+            districtCode: "4001",
+          },
+          {
+            code: "400113",
+            nameTh: "ศิลา",
+            nameEn: "Sila",
+            zipcode: "40000",
+            isActive: true,
+            provinceCode: "40",
+            districtCode: "4001",
+          },
+        ],
+      },
+      {
+        code: "4010",
+        nameTh: "บ้านไผ่",
+        nameEn: "Ban Phai",
+        isActive: true,
+        provinceCode: "40",
+        subdistricts: [
+          {
+            code: "401001",
+            nameTh: "ในเมือง",
+            nameEn: "Nai Mueang Ban Phai",
+            zipcode: "40110",
+            isActive: true,
+            provinceCode: "40",
+            districtCode: "4010",
+          },
+          {
+            code: "401002",
+            nameTh: "เมืองเพีย",
+            nameEn: "Mueang Phia",
+            zipcode: "40110",
+            isActive: true,
+            provinceCode: "40",
+            districtCode: "4010",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    region: "south",
+    province: {
+      code: "90",
+      nameTh: "สงขลา",
+      nameEn: "Songkhla",
+      isActive: true,
+    },
+    districts: [
+      {
+        code: "9011",
+        nameTh: "หาดใหญ่",
+        nameEn: "Hat Yai",
+        isActive: true,
+        provinceCode: "90",
+        subdistricts: [
+          {
+            code: "901101",
+            nameTh: "คอหงส์",
+            nameEn: "Kho Hong",
+            zipcode: "90110",
+            isActive: true,
+            provinceCode: "90",
+            districtCode: "9011",
+          },
+          {
+            code: "901102",
+            nameTh: "หาดใหญ่",
+            nameEn: "Hat Yai",
+            zipcode: "90110",
+            isActive: true,
+            provinceCode: "90",
+            districtCode: "9011",
+          },
+        ],
+      },
+      {
+        code: "9001",
+        nameTh: "เมืองสงขลา",
+        nameEn: "Mueang Songkhla",
+        isActive: true,
+        provinceCode: "90",
+        subdistricts: [
+          {
+            code: "900101",
+            nameTh: "บ่อยาง",
+            nameEn: "Bo Yang",
+            zipcode: "90000",
+            isActive: true,
+            provinceCode: "90",
+            districtCode: "9001",
+          },
+          {
+            code: "900108",
+            nameTh: "พะวง",
+            nameEn: "Phawong",
+            zipcode: "90100",
+            isActive: true,
+            provinceCode: "90",
+            districtCode: "9001",
+          },
+        ],
+      },
+    ],
+  },
+];
+
 async function main() {
   console.log('Start seeding constituencies...')
 
@@ -9,50 +304,46 @@ async function main() {
   await prisma.users.deleteMany()
   await prisma.candidate.deleteMany()
   await prisma.party.deleteMany()
+  await prisma.consituency.deleteMany()
 
   await prisma.subdistrict.deleteMany()
   await prisma.district.deleteMany()
   await prisma.province.deleteMany()
 
-  await prisma.consituency.deleteMany()
   await prisma.electionsetting.deleteMany()
 
   console.log('Cleared existing data')
   console.log('Start seeding locations...')
 
-  // ข้อมูลจังหวัดเชียงใหม่
-  await prisma.province.create({
-    data: {
-      code: "50",
-      nameTh: "เชียงใหม่",
-      nameEn: "Chiang Mai",
-      isActive: true,
-    },
+  const districts = representativeLocations.flatMap((location) => location.districts)
+  const subdistricts = districts.flatMap((district) => district.subdistricts)
+
+  await prisma.province.createMany({
+    data: representativeLocations.map((location) => location.province),
   })
 
-  // ข้อมูลอำเภอเมืองเชียงใหม่
-  await prisma.district.create({
-    data: {
-      code: "5001",
-      nameTh: "เมืองเชียงใหม่",
-      nameEn: "Mueang Chiang Mai",
-      isActive: true,
-      provinceCode: "50",
-    },
+  await prisma.district.createMany({
+    data: districts.map(({ subdistricts: _subdistricts, ...district }) => district),
   })
 
-  // ข้อมูลตำบลสุเทพ
-  await prisma.subdistrict.create({
-    data: {
-      code: "500101",
-      nameTh: "สุเทพ",
-      nameEn: "Suthep",
-      zipcode: "50200",
-      isActive: true,
-      provinceCode: "50",
-      districtCode: "5001",
-    },
+  await prisma.subdistrict.createMany({
+    data: subdistricts,
   })
+
+  const chiangMaiLocation = representativeLocations.find(
+    (location) => location.region === "north"
+  )
+
+  if (!chiangMaiLocation) {
+    throw new Error("Chiang Mai seed location is missing")
+  }
+
+  const chiangMaiDistrict = chiangMaiLocation.districts[0]
+  const chiangMaiSubdistrict = chiangMaiDistrict?.subdistricts[0]
+
+  if (!chiangMaiDistrict || !chiangMaiSubdistrict) {
+    throw new Error("Chiang Mai district seed is incomplete")
+  }
 
   console.log('Created Locations')
 
@@ -82,12 +373,16 @@ async function main() {
   //สรา้งเขต
   const cm1 = await prisma.consituency.create({
     data: {
-      provinceCode: "50",
-      districtCode: "5001",
-      subdistrictCode: "500101",
+      provinceCode: chiangMaiLocation.province.code,
+      districtCode: chiangMaiDistrict.code,
       consituencynumber: 1,
-      zipcode: "50200",
+      zipcode: chiangMaiSubdistrict.zipcode ?? "50200",
       isclosed: false,
+      subdistricts: {
+        create: chiangMaiDistrict.subdistricts.map((subdistrict) => ({
+          subdistrictCode: subdistrict.code,
+        })),
+      },
     },
   })
 
@@ -118,7 +413,7 @@ async function main() {
 
   //สร้างผู้สมัคร
 
-  const cmProvince = await prisma.province.findUnique({ where: { code: "50" } })
+  const cmProvince = await prisma.province.findUnique({ where: { code: chiangMaiLocation.province.code } })
   await prisma.candidate.create({
     data: {
       candidatenumber: 1,
@@ -191,7 +486,7 @@ async function main() {
       nationalId: "3333333333333",
       firstname: "กรรมการ", lastname: "เที่ยงธรรม",
       password: passwordHash,
-      address: "สำนักงาน กกต.", district: "เมืองเชียงใหม่", subdistrict: "สุเทพ", province: "เชียงใหม่",
+      address: "สำนักงาน กกต.", district: chiangMaiDistrict.nameTh, subdistrict: chiangMaiSubdistrict.nameTh, province: chiangMaiLocation.province.nameTh,
       consituencyID: cm1.id,
       role: {
         create: [

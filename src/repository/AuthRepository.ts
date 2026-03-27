@@ -1,11 +1,11 @@
-import {prisma} from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 import { RoleName } from '../generated/prisma/enums';
 
 
 export async function registerUser(
     nationalId: string,
     firstName: string,
-    lastName: string,         
+    lastName: string,
     address: string,
     province: string,
     district: string,
@@ -15,21 +15,21 @@ export async function registerUser(
 
 ) {
     return prisma.users.create({
-       data: {
+        data: {
             nationalId: nationalId,
             firstname: firstName,
             lastname: lastName,
             password: password,
             address: address,
-            subdistrict: subdistrict, 
-            district: district, 
+            subdistrict: subdistrict,
+            district: district,
             province: province,
-            
-            consituency : {
+
+            consituency: {
                 connect: { id: consituencyId }
             },
 
-            role:{
+            role: {
                 create: {
                     roleName: RoleName.ROLE_VOTER
                 }
@@ -57,7 +57,7 @@ export async function getAllUsers() {
         },
     });
 }
-    
+
 export async function findUserByNationalId(nationalId: string) {
     return prisma.users.findUnique({
         where: {
